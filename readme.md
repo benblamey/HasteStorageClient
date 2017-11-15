@@ -1,16 +1,25 @@
-Client for the HASTE Storage engine.
+# Client for the HASTE Storage Engine
 
-For now, this simply calls the MongoDB and Swift Container Clients.
-Over time, this will become a compatibility layer for the generic HASTE storage engine client.
+For now, this simply calls the MongoDB and Swift Container clients. Python 3.x.
 
-Installation (development mode):
+## Installation
+For installation in [development mode](https://setuptools.readthedocs.io/en/latest/setuptools.html#development-mode):
 ```
 git clone git@github.com:benblamey/HasteStorageClient.git
 cd HasteStorageClient
-pip install -e .
+pip3 install -e .
 ```
 
-Example: see [example.py](example.py)
+## Update
+```
+cd HasteStorageClient
+git pull
+pip3 install -e .
+```
 
-Note: It isn't possible to connect to the database server from outside the SNIC cloud, so for local dev/testing you'll
+## Example
+See [example.py](example.py).
+
+### Note
+It isn't possible to connect to the database server from outside the SNIC cloud, so for local dev/testing you'll
 need to use port forwarding from another machine. https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding
