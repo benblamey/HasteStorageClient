@@ -1,6 +1,6 @@
 import time
 
-from haste_storage_client.haste_storage_client import HasteStorageClient
+from haste_storage_client.core import HasteStorageClient
 
 client = HasteStorageClient('localhost', # IP address of database server.
                         10000, # should be 27017 from inside the cloud.
