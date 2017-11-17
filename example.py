@@ -14,7 +14,7 @@ auth = v3.Password(auth_url='https://foo.se:5000/v3/',
 
 # Identifies both the experiment, and the session (ie. unique each time the stream starts),
 # for example, this would be a good format - this needs to be generated at the stream edge.
-stream_id = "strm_" + datetime.datetime.today().strftime('%Y-%m-%d--%H-%M-%S') + "_exp1"
+stream_id = datetime.datetime.today().strftime('%Y-%m-%d--%H-%M-%S') + "_exp1"
 
 client = HasteStorageClient(stream_id,
                             'localhost',  # IP address of database server.
@@ -25,6 +25,7 @@ blob = b'this is a binary blob eg. image data.'
 timestamp_cloud_edge = time.time()
 
 client.save(timestamp_cloud_edge,
+            (12.34, 56.78),
             blob,
             {'image_height_pixels': 300,  # bag of extracted features here
              'image_width_pixels': 300,
