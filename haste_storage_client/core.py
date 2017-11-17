@@ -10,7 +10,8 @@ class HasteStorageClient:
                  port,
                  keystone_auth):
         """
-        :param stream_id: String ID for the stream session (unique for each execution of the experiment)
+        :param stream_id: String ID for the stream session - used to group all the data
+        (unique for each execution of the experiment)
         :param host: Hostname/IP of database server.
         :param port: Database server port. Usually 27017.
         :param keystone_auth: OpenCloud keystone auth v3 password object,
