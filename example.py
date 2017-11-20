@@ -14,7 +14,7 @@ auth = v3.Password(auth_url='https://foo.se:5000/v3/',
 
 # Identifies both the experiment, and the session (ie. unique each time the stream starts),
 # for example, this would be a good format - this needs to be generated at the stream edge.
-stream_id = datetime.datetime.today().strftime('%Y-%m-%d--%H-%M-%S') + "_exp1"
+stream_id = datetime.datetime.today().strftime('%Y_%m_%d__%H_%M_%S') + "_exp1"
 
 client = HasteStorageClient(stream_id,
                             'localhost',  # IP address of database server.
