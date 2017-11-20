@@ -25,20 +25,19 @@ class RestInterestingnessModel(InterestingnessModel):
         """
         :param url for Rest Service, should accept HTTP GET JSON of the format:
         {
-            'unix_timestamp': 1234.5678,
-            'location': [0.1,2.3,4.5],
-            'metadata': {
-                'feature_1':'foo',
-                'feature_2':42
+            "unix_timestamp": 1234.5678,
+            "location": [0.1,2.3,4.5],
+            "metadata": {
+                "feature_1":"foo",
+                "feature_2":42
             }
         }
-        ...and respond with something like the following:
+        ...and respond with:
         {
-            'interestingness':0.5
+            "interestingness":0.5
         }
         Where the interestingness is in the closed interval [0,1] 
         """
-
 
     def interestingness(self,
                         unix_timestamp,

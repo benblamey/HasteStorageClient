@@ -1,6 +1,7 @@
 import time
 import datetime
 from haste_storage_client.core import HasteStorageClient
+from haste_storage_client.interestingness_model import RestInterestingnessModel
 from keystoneauth1.identity import v3
 
 # Create a password auth plugin
@@ -16,10 +17,14 @@ auth = v3.Password(auth_url='https://foo.se:5000/v3/',
 # for example, this would be a good format - this needs to be generated at the stream edge.
 stream_id = datetime.datetime.today().strftime('%Y_%m_%d__%H_%M_%S') + "_exp1"
 
+# Optionally, specify REST server with interesting model:
+interestingnessModel = RestInterestingnessModel('http://localhost:5000/model/api/v0.1/evaluate')
+
 client = HasteStorageClient(stream_id,
                             'localhost',  # IP address of database server.
                             27017,
-                            auth)
+                            auth,
+                            interestingness_model=interestingnessModel)
 
 blob = b'this is a binary blob eg. image data.'
 timestamp_cloud_edge = time.time()
