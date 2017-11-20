@@ -35,12 +35,14 @@ class HasteStorageClient:
         :param blob: binary blob (eg. image).
         :param metadata: dictionary containing extracted metadata (eg. image features).
         """
-        blob_name = "strm_" + self.stream_id + "_ts_" + str(unix_timestamp)
+        blob_name = 'strm_' + self.stream_id + '_ts_' + str(unix_timestamp)
+        blob_location = 'swift'
 
         result = self.mongo_db['strm_' + self.stream_id].insert({
             'timestamp': unix_timestamp,
             'location': location,
             'blob_id': blob_name,
+            'blob_location': blob_location,
             'metadata': metadata,
         })
 
