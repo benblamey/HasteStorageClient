@@ -11,7 +11,9 @@ class HasteStorageClient:
                  host,
                  port,
                  keystone_auth,
-                 interestingness_model=None):
+                 interestingness_model=None,
+                 storage_policy=None,
+                 default_storage_class='swift'):
         """
         :param stream_id: String ID for the stream session - used to group all the data
         (unique for each execution of the experiment)
@@ -21,11 +23,20 @@ class HasteStorageClient:
         see: https://docs.openstack.org/keystoneauth/latest/api/keystoneauth1.identity.v3.html#module-keystoneauth1.identity.v3.password
         :param interestingness_model: InterestingnessModel to determine interestingness of the document,
         and hence the intended storage class.
+        :param storage_policy: policy mapping interestingness to storage class(es). Supported are 'swift' and
+        None (meaning discard).
+        :param default_storage_class: default storage class if no matches in policy.
+        None means the document will be discarded.
         """
+        if default_storage_class is None:
+            raise ValueError("default_storage_location cannot be None - did you mean 'trash'?")
+
         self.mongo_client = MongoClient(host, port)
         self.mongo_db = self.mongo_client.streams
         self.stream_id = stream_id
         self.interestingness_model = interestingness_model
+        self.storage_policy = storage_policy
+        self.default_storage_class = default_storage_class
 
         keystone_session = session.Session(auth=keystone_auth)
         self.swift_conn = swiftclient.client.Connection(session=keystone_session)
@@ -38,21 +49,23 @@ class HasteStorageClient:
         """
         :param unix_timestamp: should come from the cloud edge (eg. microscope). floating point. uniquely identifies the
         document.
-        :param location: n-tuple representing spatial information (eg. (x,y)).
+        :param location: n-tuple representing spatial information (eg. (bsc,y)).
         :param blob: binary blob (eg. image).
         :param metadata: dictionary containing extracted metadata (eg. image features).
         """
 
         interestingness = self.__interestingness(location, metadata, unix_timestamp)
+        blob_id = 'strm_' + self.stream_id + '_ts_' + str(unix_timestamp)
+        blob_storage_classes = self.__save_blob(blob_id, blob, interestingness)
 
-        blob_id, blob_location = self.__save_blob(blob, interestingness, unix_timestamp)
+        blob_storage_classes = ['Trash' if bsc is None else bsc for bsc in blob_storage_classes]
 
         result = self.mongo_db['strm_' + self.stream_id].insert({
             'timestamp': unix_timestamp,
             'location': location,
             'interestingness': interestingness,
             'blob_id': blob_id,
-            'blob_location': blob_location,
+            'blob_storage_classes': blob_storage_classes,
             'metadata': metadata,
         })
 
@@ -60,15 +73,28 @@ class HasteStorageClient:
         self.mongo_client.close()
         self.swift_conn.close()
 
-    def __save_blob(self, blob, interestingness, unix_timestamp):
-        if interestingness > 0.1:
-            blob_id = 'strm_' + self.stream_id + '_ts_' + str(unix_timestamp)
-            blob_location = 'swift'
+    def __save_blob(self, blob_id, blob, interestingness):
+        blob_locations = []
+        if self.storage_policy is not None:
+            for interestingness_lambda, storage_class in self.storage_policy:
+                if interestingness_lambda(interestingness):
+                    self.__save_blob_to_class(blob, blob_id, storage_class)
+                    blob_locations.append(storage_class)
+
+        if blob_locations.count == 0:
+            self.__save_blob_to_class(blob, blob_id, self.default_storage_class)
+            blob_locations.append(self.default_storage_class)
+
+        return blob_locations
+
+    def __save_blob_to_class(self, blob, blob_id, storage_class):
+        if storage_class is None:
+            # Implies discard.
+            pass
+        if storage_class == 'swift':
             self.swift_conn.put_object('Haste_Stream_Storage', blob_id, blob)
         else:
-            blob_id = None
-            blob_location = '(deleted)'
-        return blob_id, blob_location
+            raise ValueError('unknown storage class')
 
     def __interestingness(self, location, metadata, unix_timestamp):
         if self.interestingness_model is not None:

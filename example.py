@@ -24,7 +24,9 @@ client = HasteStorageClient(stream_id,
                             'localhost',  # IP address of database server.
                             27017,
                             auth,
-                            interestingness_model=interestingnessModel)
+                            interestingness_model=interestingnessModel,
+                            storage_policy=[(lambda x: x > 0.5, 'swift')],
+                            default_storage_class='trash')
 
 blob = b'this is a binary blob eg. image data.'
 timestamp_cloud_edge = time.time()
