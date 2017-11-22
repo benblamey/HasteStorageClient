@@ -1,16 +1,16 @@
 from pymongo import MongoClient
 from keystoneauth1 import session
+from keystoneauth1.identity import v3
 import swiftclient.client
-
+from os.path import expanduser
+import json
 
 class HasteStorageClient:
     INTERESTINGNESS_DEFAULT = 1.0
 
     def __init__(self,
                  stream_id,
-                 host,
-                 port,
-                 keystone_auth,
+                 config = None,
                  interestingness_model=None,
                  storage_policy=None,
                  default_storage_class='swift'):
@@ -28,18 +28,39 @@ class HasteStorageClient:
         :param default_storage_class: default storage class if no matches in policy.
         None means the document will be discarded.
         """
+         
+        if config is None:
+            try:
+                config=self._get_config()
+            except:
+                raise ValueError("If config is None, provide a configuration file.")
+                
         if default_storage_class is None:
             raise ValueError("default_storage_location cannot be None - did you mean 'trash'?")
 
-        self.mongo_client = MongoClient(host, port)
+            
+        self.mongo_client = MongoClient(config["haste_metadata_db_server"], int(config["haste_metadata_db_port"]))
         self.mongo_db = self.mongo_client.streams
         self.stream_id = stream_id
         self.interestingness_model = interestingness_model
         self.storage_policy = storage_policy
         self.default_storage_class = default_storage_class
+        
+        # Establish a connection to the OpenStack Swift storage backend
+        self.swift_conn = self._get_os_swift_connection(config["os_swift_auth_credentials"])
 
-        keystone_session = session.Session(auth=keystone_auth)
-        self.swift_conn = swiftclient.client.Connection(session=keystone_session)
+        
+    def _get_config(self):
+        home = expanduser("~")
+        default_config_dir = home+"/.haste" 
+        with open(default_config_dir+"/haste_storage_client_config.json") as fh:
+            haste_storage_client_config = json.load(fh)
+        return haste_storage_client_config
+            
+    def _get_os_swift_connection(self, swift_auth_credentials):
+        auth = v3.Password(**swift_auth_credentials)
+        keystone_session = session.Session(auth=auth)
+        return swiftclient.client.Connection(session=keystone_session)
 
     def save(self,
              unix_timestamp,

@@ -2,16 +2,22 @@ import time
 import datetime
 from haste_storage_client.core import HasteStorageClient
 from haste_storage_client.interestingness_model import RestInterestingnessModel
-from keystoneauth1.identity import v3
 
-# Create a password auth plugin
-# See: https://docs.openstack.org/keystoneauth/latest/api/keystoneauth1.identity.v3.html#module-keystoneauth1.identity.v3.password
-auth = v3.Password(auth_url='https://foo.se:5000/v3/',
-                   username='my_snic_username',
-                   password='my_snic_password',
-                   user_domain_name='foo',
-                   project_name='my_project',
-                   project_domain_name='some_domain')
+
+
+haste_storage_client_config = {
+ 
+ "haste_metadata_db_server":"haste storage server IP", 
+ "haste_metadata_db_port":"haste storage server port",     
+ "os_swift_auth_credentials":{
+        "auth_url":'https://foo.se:5000/v3/',
+        "username":'my_snic_username',
+        "password":'my_snic_password',
+        "user_domain_name":'foo',
+        "project_name":'my_project',
+        "project_domain_name":'some_domain'
+  }
+}
 
 # Identifies both the experiment, and the session (ie. unique each time the stream starts),
 # for example, this would be a good format - this needs to be generated at the stream edge.
@@ -20,10 +26,9 @@ stream_id = datetime.datetime.today().strftime('%Y_%m_%d__%H_%M_%S') + "_exp1"
 # Optionally, specify REST server with interesting model:
 interestingnessModel = RestInterestingnessModel('http://localhost:5000/model/api/v0.1/evaluate')
 
+
+
 client = HasteStorageClient(stream_id,
-                            'localhost',  # IP address of database server.
-                            27017,
-                            auth,
                             interestingness_model=interestingnessModel,
                             storage_policy=[(lambda x: x > 0.5, 'swift')],
                             default_storage_class='trash')
