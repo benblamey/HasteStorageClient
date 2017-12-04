@@ -1,0 +1,14 @@
+{
+  "haste_metadata_server": {
+    "host": "130.xxx.yy.zz",
+    "port": 27017
+  },
+  "os_swift": {
+    "username": "xxxxx",
+    "password": "xxxx",
+    "project_name": "xxxxx",
+    "user_domain_name": "xxxx",
+    "auth_url": "xxxxx",
+    "project_domain_name": "xxxx"
+  }
+}
