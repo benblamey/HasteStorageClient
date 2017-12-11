@@ -24,7 +24,7 @@ class RestInterestingnessModel(InterestingnessModel):
         {
             "interestingness": 0.5
         }
-        Where the interestingness is in the closed interval [0,1] 
+        Where the interestingness is in the closed interval [0,1]
         """
 
     def interestingness(self, metadata):

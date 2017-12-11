@@ -6,8 +6,8 @@ from haste_storage_client.interestingness_model import RestInterestingnessModel
 
 haste_storage_client_config = {
     'haste_metadata_server': {
-        'host': '130.xxx.yy.zz',
-        'port': 27017
+        # See: https://docs.mongodb.com/manual/reference/connection-string/
+        'connection_string': 'mongodb://130.xxx.yy.zz:27017'
     },
     'os_swift': {
         # See: https://docs.openstack.org/keystoneauth/latest/
