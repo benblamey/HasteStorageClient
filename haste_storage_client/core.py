@@ -23,6 +23,7 @@ class HasteStorageClient:
             *unique for each execution of the experiment*.
         :param config (dict): dictionary of credentials and hostname for metadata server and storage,
             see haste_storage_client_config.json for structure.
+            MongoDB connection string format, see: https://docs.mongodb.com/manual/reference/connection-string/
             If `None`, will be read from ~/.haste/haste_storage_client_config.json
         :param interestingness_model (InterestingnessModel): determines interestingness of the document,
             and hence the intended storage platform(s) for the blob. 
@@ -45,8 +46,7 @@ class HasteStorageClient:
         if default_storage is None:
             raise ValueError("default_storage_location cannot be None - did you mean 'trash'?")
 
-        self.mongo_client = MongoClient(config['haste_metadata_server']['host'],
-                                        config['haste_metadata_server']['port'])
+        self.mongo_client = MongoClient(config['haste_metadata_server']['connection_string'])
         self.mongo_db = self.mongo_client.streams
         self.stream_id = stream_id
         self.interestingness_model = interestingness_model
