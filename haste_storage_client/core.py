@@ -91,6 +91,8 @@ class HasteStorageClient:
         self.mongo_client.close()
         self.os_swift_storage.close()
 
+    # TODO: order of (blob_id, blob_bytes) in params is mixed - fix.
+
     def __save_blob(self, blob_id, blob_bytes, interestingness):
         storage_platforms = []
         if self.storage_policy is not None:

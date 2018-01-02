@@ -29,8 +29,12 @@ class OsSwiftStorage(Storage):
         self.__reauthenticate_if_needed()
 
     def save_blob(self, blob_bytes, blob_id):
+        print('save_blob', flush=True)
         self.__reauthenticate_if_needed()
+        print(blob_id)
+        print(blob_bytes)
         self.conn.put_object('Haste_Stream_Storage', blob_id, blob_bytes)
+
 
     def close(self):
         if self.conn is not None:
