@@ -33,7 +33,7 @@ class OsSwiftStorage(Storage):
         self.__reauthenticate_if_needed()
         print(blob_id)
         print(blob_bytes)
-        self.conn.put_object('Haste_Stream_Storage', blob_id, blob_bytes)
+        self.conn.put_object('Haste_Stream_Storage2', blob_id, blob_bytes)
 
 
     def close(self):
