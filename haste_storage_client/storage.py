@@ -30,6 +30,12 @@ class OsSwiftStorage(Storage):
 
     def save_blob(self, blob_bytes, blob_id):
         self.__reauthenticate_if_needed()
+
+        if isinstance(blob_bytes, bytearray):
+            # Workaround a bug in the OpenStack client - 'bytearray' is not properly handled as a content.
+            # (see swiftclient/client.py:1315)
+            blob_bytes = bytes(blob_bytes)
+
         self.conn.put_object('Haste_Stream_Storage', blob_id, blob_bytes)
 
     def close(self):
