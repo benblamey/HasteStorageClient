@@ -33,7 +33,7 @@ class OsSwiftStorage(Storage):
 
         if isinstance(blob_bytes, bytearray):
             # Workaround a bug in the OpenStack client - 'bytearray' is not properly handled as a content.
-            # (see swiftclient/client.py:1315)
+            # (see https://bugs.launchpad.net/python-swiftclient/+bug/1741991)
             blob_bytes = bytes(blob_bytes)
 
         self.conn.put_object('Haste_Stream_Storage', blob_id, blob_bytes)
