@@ -27,3 +27,6 @@ instead of specifying config in constructor.
 ### Note
 It isn't possible to connect to the database server from outside the SNIC cloud, so for local dev/testing you'll
 need to use port forwarding from another machine. https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding
+
+# Contributors
+Ben Blamey, Andreas Hellander
