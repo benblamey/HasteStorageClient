@@ -9,5 +9,8 @@
     "user_domain_name": "xxxx",
     "auth_url": "xxxxx",
     "project_domain_name": "xxxx"
+  },
+  "local_storage": {
+    "folder": "/ubuntu/haste_storage"
   }
 }

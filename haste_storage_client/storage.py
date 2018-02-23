@@ -18,6 +18,15 @@ class Storage(object, metaclass=abc.ABCMeta):
 # The auth token expires after 24 hours by default, but refresh more frequently:
 OS_SWIFT_CONN_MAX_LIFETIME_SECONDS = 60 * 60
 
+class LocalStorage(Storage):
+
+    def __init__(self, config):
+       self.config = config
+
+    def save_blob(self, blob_bytes, blob_id):
+       with open("{0}/{1}".format(config["folder"],blob_id),"w") as fh:
+            fh.write(blob_bytes)
+
 
 class OsSwiftStorage(Storage):
 
