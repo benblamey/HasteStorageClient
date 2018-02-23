@@ -6,8 +6,8 @@ from haste_storage_client.interestingness_model import RestInterestingnessModel
 
 haste_storage_client_config = {
     'haste_metadata_server': {
-        'host': '130.xxx.yy.zz',
-        'port': 27017
+        # See: https://docs.mongodb.com/manual/reference/connection-string/
+        'connection_string': 'mongodb://130.xxx.yy.zz:27017'
     },
     'os_swift': {
         # See: https://docs.openstack.org/keystoneauth/latest/
@@ -36,12 +36,12 @@ client = HasteStorageClient(stream_id,
                             storage_policy=[(0.5, 1.0, OS_SWIFT_STORAGE)],  # map 0.5<=interestingness<=1.0 to OS swift.
                             default_storage=TRASH)  # discard blobs which don't match the policy above.
 
-blob = b'this is a binary blob eg. image data.'
+blob_bytes = b'this is a binary blob eg. image data.'
 timestamp_cloud_edge = time.time()
 
 client.save(timestamp_cloud_edge,
             (12.34, 56.78),
-            blob,
+            blob_bytes,
             {'image_height_pixels': 300,  # bag of extracted features here
              'image_width_pixels': 300,
              'number_of_green_pixels': 1234})

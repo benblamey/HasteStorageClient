@@ -1,7 +1,6 @@
 {
   "haste_metadata_server": {
-    "host": "130.xxx.yy.zz",
-    "port": 27017
+    "connection_string": "mongodb://130.xxx.yy.zz:27017"
   },
   "os_swift": {
     "username": "xxxxx",
