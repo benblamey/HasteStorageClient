@@ -23,8 +23,10 @@ haste_storage_client_config = {
 
 # Identifies both the experiment, and the session (ie. unique each time the stream starts),
 # for example, this would be a good format - this needs to be generated at the stream edge.
-initials = 'jb'
+initials = 'anna exampleson'
 stream_id = datetime.datetime.today().strftime('%Y_%m_%d__%H_%M_%S') + '_exp1_' + initials
+
+print('stream ID is: %s' % stream_id)
 
 # Optionally, specify REST server with interesting model:
 interestingness_model = RestInterestingnessModel('http://localhost:5000/model/api/v0.1/evaluate')
@@ -38,9 +40,11 @@ client = HasteStorageClient(stream_id,
 
 blob_bytes = b'this is a binary blob eg. image data.'
 timestamp_cloud_edge = time.time()
+substream_id = 'B13'  # Group by microscopy well ID.
 
 client.save(timestamp_cloud_edge,
             (12.34, 56.78),
+            substream_id,
             blob_bytes,
             {'image_height_pixels': 300,  # bag of extracted features here
              'image_width_pixels': 300,

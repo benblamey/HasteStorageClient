@@ -36,6 +36,7 @@ class RestInterestingnessModel(InterestingnessModel):
                    'Content-Type': 'application/json',
                    'Accept': 'application/json'}
 
+        print('querying interestingness using REST server...')
         data = urllib.parse.urlencode(metadata)
         req = urllib.request.Request(self.url + '?' + data, headers=headers)
         with urllib.request.urlopen(req) as response:
