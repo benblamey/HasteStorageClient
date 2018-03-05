@@ -7,9 +7,20 @@ import json
 class InterestingnessModel(object, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def interestingness(self,
-                        metadata):
+                        stream_id=None,
+                        timestamp=None,
+                        location=None,
+                        substream_id=None,
+                        metadata=None,
+                        mongo_collection=None):
         """
-        :param metadata: dictionary containing extracted metadata (eg. image features).
+        :param stream_id (str): ID for the stream session - used to group all the data for that streaming session.
+        :param timestamp (numeric): should come from the cloud edge (eg. microscope). integer or floating point.
+            *Uniquely identifies the document within the streaming session*.
+        :param location (tuple): spatial information (eg. (x,y)).
+        :param substream_id (string): ID for grouping of documents in stream (eg. microscopy well ID), or 'None'.
+        :param metadata (dict): extracted metadata (eg. image features).
+        :param mongo_collection: collection in mongoDB allowing custom queries (this is a hack - best avoided!)
         """
         raise NotImplementedError('users must define interestingness(..) to use this base class')
 
@@ -27,9 +38,21 @@ class RestInterestingnessModel(InterestingnessModel):
         Where the interestingness is in the closed interval [0,1]
         """
 
-    def interestingness(self, metadata):
+    def interestingness(self,
+                        stream_id=None,
+                        timestamp=None,
+                        location=None,
+                        substream_id=None,
+                        metadata=None,
+                        mongo_collection=None):
         """
-        :param metadata: dictionary containing extracted metadata (eg. image features).
+        :param stream_id (str): ID for the stream session - used to group all the data for that streaming session.
+        :param timestamp (numeric): should come from the cloud edge (eg. microscope). integer or floating point.
+            *Uniquely identifies the document within the streaming session*.
+        :param location (tuple): spatial information (eg. (x,y)).
+        :param substream_id (string): ID for grouping of documents in stream (eg. microscopy well ID), or 'None'.
+        :param metadata (dict): extracted metadata (eg. image features).
+        :param mongo_collection: collection in mongoDB allowing custom queries (this is a hack - best avoided!)
         """
 
         headers = {'User-Agent': 'haste_storage_client (0.x)',
