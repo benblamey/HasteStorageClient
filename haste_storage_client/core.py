@@ -34,7 +34,7 @@ class HasteStorageClient:
         :param default_storage (str): storage platform if no policy matches the interestingness level. 
             valid platforms are those for `storage_policy`, and 'trash' meaning discard the blob.
         """
-         
+
         if config is None:
             try:
                 config = self.__read_config_file()
@@ -73,7 +73,13 @@ class HasteStorageClient:
         :param metadata (dict): extracted metadata (eg. image features).
         """
 
-        interestingness = self.__get_interestingness(metadata)
+        mongo_collection = self.mongo_db['strm_' + self.stream_id]
+
+        interestingness = self.__get_interestingness(timestamp=timestamp,
+                                                     location=location,
+                                                     substream_id=substream_id,
+                                                     metadata=metadata,
+                                                     mongo_collection=mongo_collection)
         blob_id = 'strm_' + self.stream_id + '_ts_' + str(timestamp)
         blob_storage_platforms = self.__save_blob(blob_id, blob_bytes, interestingness)
         if len(blob_storage_platforms) == 0:
@@ -86,7 +92,7 @@ class HasteStorageClient:
                     'blob_id': blob_id,
                     'blob_storage_platforms': blob_storage_platforms,
                     'metadata': metadata, }
-        result = self.mongo_db['strm_' + self.stream_id].insert(document)
+        result = mongo_collection.insert(document)
 
         return document
 
@@ -116,10 +122,20 @@ class HasteStorageClient:
         else:
             raise ValueError('unknown storage platform')
 
-    def __get_interestingness(self, metadata):
+    def __get_interestingness(self,
+                              timestamp=None,
+                              location=None,
+                              substream_id=None,
+                              metadata=None,
+                              mongo_collection=None):
         if self.interestingness_model is not None:
             try:
-                result = self.interestingness_model.interestingness(metadata)
+                result = self.interestingness_model.interestingness(timestamp=timestamp,
+                                                                    location=location,
+                                                                    substream_id=substream_id,
+                                                                    metadata=metadata,
+                                                                    stream_id=self.stream_id,
+                                                                    mongo_collection=mongo_collection)
                 interestingness = result['interestingness']
             except Exception as ex:
                 print(ex)
