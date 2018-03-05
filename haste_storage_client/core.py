@@ -59,26 +59,29 @@ class HasteStorageClient:
         return haste_storage_client_config
 
     def save(self,
-             unix_timestamp,
+             timestamp,
              location,
+             substream_id,
              blob_bytes,
              metadata):
         """
-        :param unix_timestamp (float): should come from the cloud edge (eg. microscope). floating point.
+        :param timestamp (numeric): should come from the cloud edge (eg. microscope). integer or floating point.
             *Uniquely identifies the document within the streaming session*.
         :param location (tuple): spatial information (eg. (x,y)).
+        :param substream_id (string): ID for grouping of documents in stream (eg. microscopy well ID), or 'None'.
         :param blob_bytes (byte array): binary blob (eg. image).
         :param metadata (dict): extracted metadata (eg. image features).
         """
 
         interestingness = self.__get_interestingness(metadata)
-        blob_id = 'strm_' + self.stream_id + '_ts_' + str(unix_timestamp)
+        blob_id = 'strm_' + self.stream_id + '_ts_' + str(timestamp)
         blob_storage_platforms = self.__save_blob(blob_id, blob_bytes, interestingness)
         if len(blob_storage_platforms) == 0:
             blob_id = ''
 
-        document = {'timestamp': unix_timestamp,
+        document = {'timestamp': timestamp,
                     'location': location,
+                    'substream_id': substream_id,
                     'interestingness': interestingness,
                     'blob_id': blob_id,
                     'blob_storage_platforms': blob_storage_platforms,
@@ -120,7 +123,7 @@ class HasteStorageClient:
                 interestingness = result['interestingness']
             except Exception as ex:
                 print(ex)
-                print('interestingness - falling back to ' + str(INTERESTINGNESS_DEFAULT))
+                print('interestingness exception - falling back to ' + str(INTERESTINGNESS_DEFAULT))
                 interestingness = INTERESTINGNESS_DEFAULT
         else:
             interestingness = INTERESTINGNESS_DEFAULT
