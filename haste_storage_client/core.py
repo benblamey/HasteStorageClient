@@ -44,13 +44,20 @@ class HasteStorageClient:
         if default_storage is None:
             raise ValueError("default_storage_location cannot be None - did you mean 'trash'?")
 
-        self.mongo_client = MongoClient(config['haste_metadata_server']['connection_string'])
-        self.mongo_db = self.mongo_client.streams
         self.stream_id = stream_id
         self.interestingness_model = interestingness_model
         self.storage_policy = storage_policy
         self.default_storage = default_storage
+
         self.os_swift_storage = OsSwiftStorage(config[OS_SWIFT_STORAGE])
+
+        self.mongo_client = MongoClient(config['haste_metadata_server']['connection_string'])
+        self.mongo_collection = self.mongo_client.streams['strm_' + self.stream_id]
+
+        # ensure indices (idempotent)
+        self.mongo_collection.create_index('substream_id')
+        self.mongo_collection.create_index('timestamp')
+        self.mongo_collection.create_index('location')
 
     @staticmethod
     def __read_config_file():
@@ -73,13 +80,10 @@ class HasteStorageClient:
         :param metadata (dict): extracted metadata (eg. image features).
         """
 
-        mongo_collection = self.mongo_db['strm_' + self.stream_id]
-
         interestingness = self.__get_interestingness(timestamp=timestamp,
                                                      location=location,
                                                      substream_id=substream_id,
-                                                     metadata=metadata,
-                                                     mongo_collection=mongo_collection)
+                                                     metadata=metadata)
         blob_id = 'strm_' + self.stream_id + '_ts_' + str(timestamp)
         blob_storage_platforms = self.__save_blob(blob_id, blob_bytes, interestingness)
         if len(blob_storage_platforms) == 0:
@@ -92,7 +96,7 @@ class HasteStorageClient:
                     'blob_id': blob_id,
                     'blob_storage_platforms': blob_storage_platforms,
                     'metadata': metadata, }
-        result = mongo_collection.insert(document)
+        result = self.mongo_collection.insert(document)
 
         return document
 
@@ -126,8 +130,7 @@ class HasteStorageClient:
                               timestamp=None,
                               location=None,
                               substream_id=None,
-                              metadata=None,
-                              mongo_collection=None):
+                              metadata=None):
         if self.interestingness_model is not None:
             try:
                 result = self.interestingness_model.interestingness(timestamp=timestamp,
@@ -135,7 +138,7 @@ class HasteStorageClient:
                                                                     substream_id=substream_id,
                                                                     metadata=metadata,
                                                                     stream_id=self.stream_id,
-                                                                    mongo_collection=mongo_collection)
+                                                                    mongo_collection=self.mongo_collection)
                 interestingness = result['interestingness']
             except Exception as ex:
                 print(ex)

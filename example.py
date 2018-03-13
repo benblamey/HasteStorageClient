@@ -23,7 +23,7 @@ haste_storage_client_config = {
 
 # Identifies both the experiment, and the session (ie. unique each time the stream starts),
 # for example, this would be a good format - this needs to be generated at the stream edge.
-initials = 'anna exampleson'
+initials = 'anna_exampleson'
 stream_id = datetime.datetime.today().strftime('%Y_%m_%d__%H_%M_%S') + '_exp1_' + initials
 
 print('stream ID is: %s' % stream_id)
