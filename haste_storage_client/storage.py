@@ -7,7 +7,7 @@ import abc
 import swiftclient.client
 
 
-class Storage(with_metaclass(object, metaclass=abc.ABCMeta)):
+class Storage(with_metaclass(object, abc.ABCMeta)):
     @abc.abstractmethod
     def save_blob(self, blob_bytes, blob_id):
         raise NotImplementedError('users must define method to use base class')

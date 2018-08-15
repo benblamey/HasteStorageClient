@@ -6,7 +6,7 @@ import urllib.parse
 import json
 
 
-class InterestingnessModel(with_metaclass(object, metaclass=abc.ABCMeta)):
+class InterestingnessModel(with_metaclass(object, abc.ABCMeta)):
     @abc.abstractmethod
     def interestingness(self,
                         stream_id=None,
