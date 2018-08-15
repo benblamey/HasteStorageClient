@@ -8,5 +8,6 @@ setup(name='haste_storage_client',
           'pymongo',
           'python-swiftclient',
           'keystoneauth1',
+          'future',
       ],
       )
