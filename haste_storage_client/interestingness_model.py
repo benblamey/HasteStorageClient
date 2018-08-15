@@ -1,10 +1,12 @@
+from __future__ import print_function
+from future.utils import with_metaclass
 import abc
 import urllib.request
 import urllib.parse
 import json
 
 
-class InterestingnessModel(object, metaclass=abc.ABCMeta):
+class InterestingnessModel(with_metaclass(object, metaclass=abc.ABCMeta)):
     @abc.abstractmethod
     def interestingness(self,
                         stream_id=None,

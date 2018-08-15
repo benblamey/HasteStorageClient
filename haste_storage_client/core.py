@@ -1,3 +1,4 @@
+from __future__ import print_function
 from pymongo import MongoClient
 from os.path import expanduser
 from .storage import OsSwiftStorage
