@@ -10,4 +10,7 @@ setup(name='haste_storage_client',
           'keystoneauth1',
           'future',
       ],
+      test_requires=[
+          'pytest'
+      ]
       )

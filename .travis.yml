@@ -1,8 +1,11 @@
 language: python
 python:
-  - "2.6"
+#  - "2.6" -- not supported -- issue:
+#E     File "/home/travis/virtualenv/python2.6.9/lib/python2.6/site-packages/swiftclient/client.py", line 139
+#E       return {key: safe_value(key, val) for (key, val) in headers}
   - "2.7"
-  - "3.3"
+
+#  - "3.3" -- broken on TravisCI -- "The program 'pytest' is currently not installed. To run 'pytest' please ask your administrator to install the package 'python-logilab-common'"
   - "3.4"
   - "3.5"
   - "3.5-dev"  # 3.5 development branch
