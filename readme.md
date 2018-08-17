@@ -1,5 +1,7 @@
 # Client for the HASTE Storage Engine
 
+[![Build Status](https://travis-ci.org/HASTE-project/HasteStorageClient.svg?branch=master)](https://travis-ci.org/HASTE-project/HasteStorageClient)
+
 For now, this simply calls the MongoDB and Swift Container clients. Python 3.x.
 
 ## Installation
