@@ -1,10 +1,19 @@
+from __future__ import print_function
 import abc
-import urllib.request
-import urllib.parse
+import sys
+if sys.version_info[0] == 2:
+    import urllib
+else:
+    # For Python3 -- this package was split:
+    import urllib.request
+    import urllib.parse
+
 import json
 
 
-class InterestingnessModel(object, metaclass=abc.ABCMeta):
+class InterestingnessModel:
+    __metaclass__ = abc.ABCMeta
+
     @abc.abstractmethod
     def interestingness(self,
                         stream_id=None,

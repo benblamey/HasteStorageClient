@@ -1,3 +1,5 @@
+from __future__ import print_function
+from future.utils import with_metaclass
 from keystoneauth1 import session
 from keystoneauth1.identity import v3
 import time
@@ -5,7 +7,10 @@ import abc
 import swiftclient.client
 
 
-class Storage(object, metaclass=abc.ABCMeta):
+
+class Storage:
+    __metaclass__ = abc.ABCMeta
+
     @abc.abstractmethod
     def save_blob(self, blob_bytes, blob_id):
         raise NotImplementedError('users must define method to use base class')
