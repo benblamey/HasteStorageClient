@@ -20,6 +20,13 @@ pip3 install -e .
 ## Example
 See [example.py](example.py).
 
+## Tests
+
+```
+pip3 install -U pytest
+pytest tests
+```
+
 ## Config
 Optionally, place `haste_storage_client_config.json` in ~/.haste/ (or windows equivalent),
 instead of specifying config in constructor.
