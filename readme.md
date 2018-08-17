@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/HASTE-project/HasteStorageClient.svg?branch=master)](https://travis-ci.org/HASTE-project/HasteStorageClient)
 
-For now, this simply calls the MongoDB and Swift Container clients. Supports Python 2.7 and Python 3.
+For now, this simply calls the MongoDB and Swift Container clients. Supports Python 2.7 and Python 3.*.
 
 ## Installation
 For installation in [development mode](https://setuptools.readthedocs.io/en/latest/setuptools.html#development-mode):
