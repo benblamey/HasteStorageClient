@@ -5,7 +5,8 @@ from .interestingness_model import InterestingnessModel
 
 class RandomInterestingnessModel(InterestingnessModel):
     """
-    An interestingness model which computes a 'random', (by taking a hash of the dictionary).
+    An interestingness model which computes a 'random', but deterministic interestingness value,
+    (by taking a hash of the dictionary).
     """
 
     def __init__(self):
@@ -36,14 +37,11 @@ class RandomInterestingnessModel(InterestingnessModel):
         }
 
         # dicts cannot be hashed directly. One approach is to use frozensets, but there may be nested dicts in the metadata anyway.
-        # Convert to JSON, (little slower).
-
+        # Also, pythons hash(..) is not consistent between processes!
+        # So instead, take the MD5 of the utf-8 encoded JSON string:
         metadata_json = json.dumps(all_metadata_for_blob)
-
-        # pythons hash(..) is not consistent between processes!
-
-        # Instead, take the MD5 of the utf-8 encoded string:
         md5_hash_bytes = hashlib.md5(metadata_json.encode('utf-8')).digest()
-        interestingness = float(sum(list(md5_hash_bytes)) % 1000)/1000
+
+        interestingness = float(sum(list(md5_hash_bytes)) % 1000) / 1000
 
         return {'interestingness': interestingness}

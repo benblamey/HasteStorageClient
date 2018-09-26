@@ -29,8 +29,8 @@ class TestRandomInterestingnessModel:
         model = RandomInterestingnessModel()
 
         args2 = self.args1.copy()
+        # Changing a single field should be enough for a different hash:
         args2['timestamp'] = 6789
-        # args2['location'] = (2, 3)
 
         result2 = model.interestingness(**args2)
         assert 0 <= result2['interestingness'] <= 1.0
