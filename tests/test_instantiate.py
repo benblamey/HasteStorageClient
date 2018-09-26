@@ -4,7 +4,7 @@ import pymongo
 import pytest
 
 from haste_storage_client.core import HasteStorageClient, OS_SWIFT_STORAGE, TRASH
-from haste_storage_client.interestingness_model import RestInterestingnessModel
+from haste_storage_client.models.restinterestingnessmodel import RestInterestingnessModel
 
 
 
