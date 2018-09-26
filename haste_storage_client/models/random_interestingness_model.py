@@ -1,3 +1,5 @@
+import json
+import hashlib
 from .interestingness_model import InterestingnessModel
 
 
@@ -26,18 +28,22 @@ class RandomInterestingnessModel(InterestingnessModel):
         :param mongo_collection: collection in mongoDB allowing custom queries (this is a hack - best avoided!)
         """
 
-        # dicts cannot be hashed directly, convert them to frozensets:
-        all_metadata_for_blob = frozenset({
+        all_metadata_for_blob = {
             'timestamp': timestamp,
             'location': location,
             'substream_id': substream_id,
-            'metadata': frozenset(metadata)
-        })
+            'metadata': metadata
+        }
 
-        # bug: this will not give a consistent hash across machines, but will do for now.
-        # bug: we don't handle nested dicts - try JSON instead.
+        # dicts cannot be hashed directly. One approach is to use frozensets, but there may be nested dicts in the metadata anyway.
+        # Convert to JSON, (little slower).
 
-        # hash can be the same modulo 1000, so take the hash of the hash.
-        interestingness = (float(hash(hash(all_metadata_for_blob))) % 1000) / 1000
+        metadata_json = json.dumps(all_metadata_for_blob)
+
+        # pythons hash(..) is not consistent between processes!
+
+        # Instead, take the MD5 of the utf-8 encoded string:
+        md5_hash_bytes = hashlib.md5(metadata_json.encode('utf-8')).digest()
+        interestingness = float(sum(list(md5_hash_bytes)) % 1000)/1000
 
         return {'interestingness': interestingness}
