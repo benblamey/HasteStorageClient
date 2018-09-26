@@ -42,6 +42,6 @@ class RandomInterestingnessModel(InterestingnessModel):
         metadata_json = json.dumps(all_metadata_for_blob)
         md5_hash_bytes = hashlib.md5(metadata_json.encode('utf-8')).digest()
 
-        interestingness = float(sum(list(md5_hash_bytes)) % 1000) / 1000
+        interestingness = float(sum(bytearray(md5_hash_bytes)) % 1000) / 1000
 
         return {'interestingness': interestingness}
