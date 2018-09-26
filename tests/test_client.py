@@ -38,7 +38,6 @@ def instantiate():
     # Optionally, specify REST server with interesting model:
     interestingness_model = RestInterestingnessModel('http://thisdomaindoesnotexist.com:5000/model/api/v0.1/evaluate')
 
-
     client = HasteStorageClient(stream_id,
                                 config=haste_storage_client_config,
                                 interestingness_model=interestingness_model,
@@ -59,6 +58,7 @@ def instantiate():
 
     client.close()
 
-# def test_instantiate():
-#     with pytest.raises(pymongo.errors.ServerSelectionTimeoutError):
-#         instantiate()
+
+def test_instantiate():
+    with pytest.raises(pymongo.errors.ServerSelectionTimeoutError):
+        instantiate()
