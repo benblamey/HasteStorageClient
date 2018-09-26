@@ -14,12 +14,16 @@ class TestRandomInterestingnessModel:
 
     def test_model_valid_result(self):
         model = RandomInterestingnessModel()
-
         result1 = model.interestingness(**self.args1)
 
         assert isinstance(result1, dict)
         assert 'interestingness' in result1
         assert 0 <= result1['interestingness'] <= 1.0
+
+    def test_hash_consistency(self):
+        model = RandomInterestingnessModel()
+        result1 = model.interestingness(**self.args1)
+        assert result1['interestingness'] == 0.861
 
     def test_distinct_hash(self):
         model = RandomInterestingnessModel()
@@ -30,6 +34,7 @@ class TestRandomInterestingnessModel:
 
         result2 = model.interestingness(**args2)
         assert 0 <= result2['interestingness'] <= 1.0
+
 
         result1 = model.interestingness(**self.args1)
         assert result1 != result2
