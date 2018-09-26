@@ -2,10 +2,10 @@ import time
 import datetime
 import pymongo
 import pytest
+from pytest import skip
 
 from haste_storage_client.core import HasteStorageClient, OS_SWIFT_STORAGE, TRASH
-from haste_storage_client.models.restinterestingnessmodel import RestInterestingnessModel
-
+from haste_storage_client.models.rest_interestingness_model import RestInterestingnessModel
 
 
 # Test that we can instantiate OK, and we get an timeout connecting to the DB server.
@@ -59,7 +59,6 @@ def instantiate():
 
     client.close()
 
-
-def test_instantiate():
-    with pytest.raises(pymongo.errors.ServerSelectionTimeoutError):
-        instantiate()
+# def test_instantiate():
+#     with pytest.raises(pymongo.errors.ServerSelectionTimeoutError):
+#         instantiate()

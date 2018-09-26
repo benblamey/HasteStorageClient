@@ -1,6 +1,7 @@
 from __future__ import print_function
 import abc
 import sys
+
 if sys.version_info[0] == 2:
     import urllib
 else:
@@ -35,5 +36,4 @@ class InterestingnessModel:
         :param metadata (dict): extracted metadata (eg. image features).
         :param mongo_collection: collection in mongoDB allowing custom queries (this is a hack - best avoided!)
         """
-        raise NotImplementedError('users must define interestingness(..) to use this base class')
-
+        return {'interestingness': 1}

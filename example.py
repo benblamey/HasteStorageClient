@@ -1,7 +1,7 @@
 import time
 import datetime
 from haste_storage_client.core import HasteStorageClient, OS_SWIFT_STORAGE, TRASH
-from haste_storage_client.models.interestingnessmodel import RestInterestingnessModel
+from haste_storage_client.models.interestingness_model import RestInterestingnessModel
 
 
 haste_storage_client_config = {

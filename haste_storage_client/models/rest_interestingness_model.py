@@ -1,4 +1,4 @@
-from .interestingnessmodel import InterestingnessModel
+from .interestingness_model import InterestingnessModel
 
 
 class RestInterestingnessModel(InterestingnessModel):
