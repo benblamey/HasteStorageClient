@@ -2,10 +2,10 @@ import time
 import datetime
 import pymongo
 import pytest
+from pytest import skip
 
 from haste_storage_client.core import HasteStorageClient, OS_SWIFT_STORAGE, TRASH
-from haste_storage_client.interestingness_model import RestInterestingnessModel
-
+from haste_storage_client.models.rest_interestingness_model import RestInterestingnessModel
 
 
 # Test that we can instantiate OK, and we get an timeout connecting to the DB server.
@@ -37,7 +37,6 @@ def instantiate():
 
     # Optionally, specify REST server with interesting model:
     interestingness_model = RestInterestingnessModel('http://thisdomaindoesnotexist.com:5000/model/api/v0.1/evaluate')
-
 
     client = HasteStorageClient(stream_id,
                                 config=haste_storage_client_config,
