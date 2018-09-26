@@ -5,18 +5,9 @@
 For now, this simply calls the MongoDB and Swift Container clients. Supports Python 2.7 and Python 3.*.
 
 ## Installation
-For installation in [development mode](https://setuptools.readthedocs.io/en/latest/setuptools.html#development-mode):
-```
-git clone https://github.com/HASTE-project/HasteStorageClient.git
-cd HasteStorageClient
-pip3 install -e .
-```
 
-## Update
 ```
-cd HasteStorageClient
-git pull
-pip3 install -e .
+pip install haste-storage-client
 ```
 
 ## Example
