@@ -31,6 +31,3 @@ deploy:
   user: benblamey
   password:
     secure: KFugflOVA0Pp5TDnK3JuJMEMhlzJCqGK/YKjKtgUBBTBnR6kuWgZxGx3/LbEjaOjcnfrTA6P+gDY7WWZyG5WjZAm0hz8i9LjGz8+kN35gBHKmp7VuBDk2eDlBjOr6IGe8mMFT2NncZ25fEe4rWF1XhRJVI5HZLHhmE7Q0cFPTCpPEgnGs5YIAwci0GtlFsTMupSylip02+OkO3X62A/qkoW/sy7zHOSXmELDkP5Ze3Ul52vfczjFu705odYh6P+qE2X9YIXlHbGIvvJbeEoe2/QK88dJUkQC1Ih7FMOhoNJUg//GzXMLVRRZDJaBge6nM9wK6PMi+rlOkxOI8IZ/SXAK2Aw1rRPcj9cnbkLiQyapYnJhkvx62/nrE4ViENY43a7MszukiCfyswKHVpR1EiOwztLiYsyjs1bL/ncKolBnFWYLexVz5ILlnjgYhVwRPZmhjHeURzcz3fWSfaJGm2YTLCw5dpr/S8gR7TKegsFtTNFw7HP7yVRw1EcMpgiCYRDO3gaN4T305S5XXUQKe/XfjClzRPS+ZFbsmJHCkidVJuByH1rFpajF1QOkRymvJPF5nYOEXHv/9DrTfCeq6TJNPIQ/gfZIbpVgL26ae/bifJm/3OjXeRM5WjIA5WnKuKE57+++bnzGPiVlawnb1kuxomCToMV7IwmGL1nDC7I=
-  on:
-    # Start a new build when a new tag is created.
-    tags: true

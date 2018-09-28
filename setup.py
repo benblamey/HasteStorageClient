@@ -3,6 +3,7 @@
 from setuptools import setup
 
 setup(name='haste_storage_client',
+      version='0.10',
       packages=['haste_storage_client',
                 'haste_storage_client.models'],
       description='Client for the HASTE storage plaform: http://http://haste.research.it.uu.se',
