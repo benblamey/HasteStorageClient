@@ -1,13 +1,19 @@
 {
   "haste_metadata_server": {
-    "connection_string": "mongodb://130.xxx.yy.zz:27017"
+    "connection_string": "mongodb://130.xxx.yy.zz:27017/streams"
   },
-  "os_swift": {
-    "username": "xxxxx",
-    "password": "xxxx",
-    "project_name": "xxxxx",
-    "user_domain_name": "xxxx",
-    "auth_url": "xxxxx",
-    "project_domain_name": "xxxx"
-  }
+  "targets": [
+    {
+      "id": "os_swift",
+      "class": "OsSwiftStorage",
+      "config": {
+        "username": "xxxxx",
+        "password": "xxxx",
+        "project_name": "xxxxx",
+        "user_domain_name": "xxxx",
+        "auth_url": "xxxxx",
+        "project_domain_name": "xxxx"
+      }
+    }
+  ]
 }

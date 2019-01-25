@@ -5,8 +5,10 @@ from setuptools import setup
 setup(name='haste_storage_client',
       version='0.10',
       packages=['haste_storage_client',
-                'haste_storage_client.models'],
-      description='Client for the HASTE storage plaform: http://http://haste.research.it.uu.se',
+                'haste_storage_client.models',
+                'haste_storage_client.storage'
+                ],
+      description='Client for the HASTE storage plaform: http://haste.research.it.uu.se',
       author='Ben Blamey',
       author_email='ben.blamey@it.uu.se',
       install_requires=[
