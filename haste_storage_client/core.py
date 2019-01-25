@@ -53,7 +53,7 @@ class HasteStorageClient:
         self.os_swift_storage = OsSwiftStorage(config[OS_SWIFT_STORAGE])
 
         self.mongo_client = MongoClient(config['haste_metadata_server']['connection_string'])
-        self.mongo_collection = self.mongo_client.get_default_database()['strm_' + self.stream_id]
+        self.mongo_collection = self.mongo_client.get_database()['strm_' + self.stream_id]
 
         # ensure indices (idempotent)
         self.mongo_collection.create_index('substream_id')
