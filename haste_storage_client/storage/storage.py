@@ -1,11 +1,9 @@
-from __future__ import print_function
-from future.utils import with_metaclass
 from keystoneauth1 import session
 from keystoneauth1.identity import v3
 import time
 import abc
 import swiftclient.client
-
+import logging
 
 
 class Storage:
@@ -20,15 +18,23 @@ class Storage:
         raise NotImplementedError('users must define method to use base class')
 
 
-# The auth token expires after 24 hours by default, but refresh more frequently:
-OS_SWIFT_CONN_MAX_LIFETIME_SECONDS = 60 * 60
+class TrashStorage(Storage):
+
+    def save_blob(self, blob_bytes, blob_id):
+        logging.info('blob id:{} sent to trash.'.format(blob_id))
+
+    def close(self):
+        pass
 
 
 class OsSwiftStorage(Storage):
+    # The auth token expires after 24 hours by default, but refresh more frequently:
+    OS_SWIFT_CONN_MAX_LIFETIME_SECONDS = 60 * 60
 
-    def __init__(self, config):
+    def __init__(self, config, id):
         self.config = config
         self.conn = None
+        self.id = id
         self.conn_timestamp_connected = None
         # Try to connect now, to fail fast:
         self.__reauthenticate_if_needed()
@@ -50,8 +56,8 @@ class OsSwiftStorage(Storage):
     def __reauthenticate_if_needed(self):
         if self.conn is None \
                 or self.conn_timestamp_connected is None \
-                or self.conn_timestamp_connected + OS_SWIFT_CONN_MAX_LIFETIME_SECONDS < time.time():
-            print('HasteStorageClient: (re)connecting os_swift...')
+                or self.conn_timestamp_connected + OsSwiftStorage.OS_SWIFT_CONN_MAX_LIFETIME_SECONDS < time.time():
+            logging.info('HasteStorageClient {}: (re)connecting os_swift...'.format(self.id))
 
             if self.conn is not None:
                 self.conn.close()

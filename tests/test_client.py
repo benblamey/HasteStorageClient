@@ -10,24 +10,7 @@ from haste_storage_client.models.rest_interestingness_model import RestInteresti
 
 # Test that we can instantiate OK, and we get an timeout connecting to the DB server.
 # This basically tests if the source parses OK.
-def instantiate():
-    haste_storage_client_config = {
-        'haste_metadata_server': {
-            # See: https://docs.mongodb.com/manual/reference/connection-string/
-            'connection_string': 'mongodb://username:password@mongodb.thisdomaindoesnotexist.com/streams'
-        },
-        'os_swift': {
-            # See: https://docs.openstack.org/keystoneauth/latest/
-            #   api/keystoneauth1.identity.v3.html#module-keystoneauth1.identity.v3.password
-            'username': 'xxxxx',
-            'password': 'xxxx',
-            'project_name': 'xxxxx',
-            'user_domain_name': 'xxxx',
-            'auth_url': 'xxxxx',
-            'project_domain_name': 'xxxx'
-        }
-    }
-
+def instantiate(haste_storage_client_config):
     # Identifies both the experiment, and the session (ie. unique each time the stream starts),
     # for example, this would be a good format - this needs to be generated at the stream edge.
     initials = 'anna_exampleson'
@@ -41,8 +24,7 @@ def instantiate():
     client = HasteStorageClient(stream_id,
                                 config=haste_storage_client_config,
                                 interestingness_model=interestingness_model,
-                                storage_policy=[(0.5, 1.0, OS_SWIFT_STORAGE)],  # map 0.5<=interestingness<=1.0 to OS swift.
-                                default_storage=TRASH)  # discard blobs which don't match the policy above.
+                                storage_policy=[(0.5, 1.0, OS_SWIFT_STORAGE)]),  # map 0.5<=interestingness<=1.0 to OS swift.
 
     blob_bytes = b'this is a binary blob eg. image data.'
     timestamp_cloud_edge = time.time()
@@ -61,4 +43,45 @@ def instantiate():
 
 def test_instantiate():
     with pytest.raises(pymongo.errors.ServerSelectionTimeoutError):
-        instantiate()
+        # With old (pre-2019) config:
+        instantiate({
+            'haste_metadata_server': {
+                # See: https://docs.mongodb.com/manual/reference/connection-string/
+                'connection_string': 'mongodb://username:password@mongodb.thisdomaindoesnotexist.com/streams'
+            },
+            'os_swift': {
+                # See: https://docs.openstack.org/keystoneauth/latest/
+                #   api/keystoneauth1.identity.v3.html#module-keystoneauth1.identity.v3.password
+                'username': 'xxxxx',
+                'password': 'xxxx',
+                'project_name': 'xxxxx',
+                'user_domain_name': 'xxxx',
+                'auth_url': 'xxxxx',
+                'project_domain_name': 'xxxx'
+            }
+        })
+
+    with pytest.raises(pymongo.errors.ServerSelectionTimeoutError):
+        # With new config style:
+        instantiate({
+            'haste_metadata_server': {
+                # See: https://docs.mongodb.com/manual/reference/connection-string/
+                'connection_string': 'mongodb://username:password@mongodb.thisdomaindoesnotexist.com/streams'
+            },
+            'targets': [
+                {
+                    'id': 'os_swift',
+                    'class': 'OsSwiftStorage',
+                    'config': {
+                        # See: https://docs.openstack.org/keystoneauth/latest/
+                        #   api/keystoneauth1.identity.v3.html#module-keystoneauth1.identity.v3.password
+                        'username': 'xxxxx',
+                        'password': 'xxxx',
+                        'project_name': 'xxxxx',
+                        'user_domain_name': 'xxxx',
+                        'auth_url': 'xxxxx',
+                        'project_domain_name': 'xxxx'
+                    }
+                }
+            ]
+        })
