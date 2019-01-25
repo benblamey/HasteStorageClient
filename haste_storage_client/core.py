@@ -1,7 +1,6 @@
 import logging
 from pymongo import MongoClient
 from os.path import expanduser
-from haste_storage_client.storage import storage
 import json
 
 # These are deprecated, use the new-style config with custom IDs.
@@ -50,7 +49,7 @@ class HasteStorageClient:
                 'haste_metadata_server': config['haste_metadata_server'],
                 'targets': [{
                     'id': 'os_swift',
-                    'class': 'OsSwiftStorage',
+                    'class': 'haste_storage_client.storage.storage.OsSwiftStorage',
                     'config': config[OS_SWIFT_STORAGE]
                 }]
             }
@@ -65,8 +64,7 @@ class HasteStorageClient:
         self.stream_id = stream_id
         self.interestingness_model = interestingness_model
         self.storage_policy = storage_policy
-
-        self.targets = {t['id']: getattr(storage, t['class'])(t['config'], t['id']) for t in config['targets']}
+        self.targets = {t['id']: self.instantiate_target(t) for t in config['targets']}
 
         self.mongo_client = MongoClient(config['haste_metadata_server']['connection_string'])
         self.mongo_collection = self.mongo_client.get_database()['strm_' + self.stream_id]
@@ -75,6 +73,18 @@ class HasteStorageClient:
         self.mongo_collection.create_index('substream_id')
         self.mongo_collection.create_index('timestamp')
         self.mongo_collection.create_index('location')
+
+
+    def my_import(self, name):
+        components = name.split('.')
+        mod = __import__('.'.join(components[0:-1]))
+        for comp in components[1:]:
+            mod = getattr(mod, comp)
+        return mod
+
+    def instantiate_target(self, tgt):
+        klass = self.my_import(tgt['class'])
+        return klass(tgt['config'], tgt['id'])
 
     @staticmethod
     def __read_config_file():
@@ -135,9 +145,9 @@ class HasteStorageClient:
 
         return storage_platforms
 
-    def __save_blob_to_platform(self, blob_bytes, blob_id, storage_platform_id):
+    def __save_blob_to_platform(self, blob_bytes, blob_id, storage_platform_id, stream_id):
         if storage_platform_id in self.targets:
-            self.targets[storage_platform_id].save_blob(blob_bytes, blob_id)
+            self.targets[storage_platform_id].save_blob(blob_bytes, blob_id, self.stream_id)
         else:
             raise ValueError('unknown storage platform')
 

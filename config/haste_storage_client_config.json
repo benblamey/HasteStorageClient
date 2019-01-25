@@ -5,7 +5,7 @@
   "targets": [
     {
       "id": "os_swift",
-      "class": "OsSwiftStorage",
+      "class": "haste_storage_client.storage.storage.OsSwiftStorage",
       "config": {
         "username": "xxxxx",
         "password": "xxxx",
@@ -13,6 +13,16 @@
         "user_domain_name": "xxxx",
         "auth_url": "xxxxx",
         "project_domain_name": "xxxx"
+      }
+    },
+    {
+      "id": "spjuth-lab-pachyderm",
+      "class": "haste_storage_client.storage.pachyderm.PachydermStorage",
+      "config": {
+        "host": null,
+        "port": null,
+        "repo": "haste",
+        "branch": "master"
       }
     }
   ]
