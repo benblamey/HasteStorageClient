@@ -7,7 +7,9 @@ from haste_storage_client.models.rest_interestingness_model import RestInteresti
 haste_storage_client_config = {
     'haste_metadata_server': {
         # See: https://docs.mongodb.com/manual/reference/connection-string/
-        'connection_string': 'mongodb://130.xxx.yy.zz:27017'
+        # Note that the name of the database is fixed.
+        # In later versions of MongoDB (3?), it needs to be specified in the connection string.
+        'connection_string': 'mongodb://130.xxx.yy.zz:27017/streams'
     },
     'os_swift': {
         # See: https://docs.openstack.org/keystoneauth/latest/

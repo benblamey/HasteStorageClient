@@ -1,5 +1,5 @@
+import urllib
 from .interestingness_model import InterestingnessModel
-
 
 class RestInterestingnessModel(InterestingnessModel):
     """
