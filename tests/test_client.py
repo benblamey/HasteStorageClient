@@ -3,8 +3,8 @@ import datetime
 import pymongo
 import pytest
 import sys
-
-from haste_storage_client.core import HasteStorageClient, OS_SWIFT_STORAGE, TRASH
+import os
+from haste_storage_client.core import HasteStorageClient, OS_SWIFT_STORAGE
 from haste_storage_client.models.rest_interestingness_model import RestInterestingnessModel
 
 
@@ -42,6 +42,8 @@ def instantiate(haste_storage_client_config):
 
 
 def test_instantiate_pre2018():
+    os.environ['DUMMY_MONGODB_HOST'] = 'True'  # We use a dummy hostname, use short timeouts.
+
     with pytest.raises(pymongo.errors.ServerSelectionTimeoutError):
         # With old (pre-2019) config:
         instantiate({
@@ -60,12 +62,15 @@ def test_instantiate_pre2018():
                 'project_domain_name': 'xxxx'
             }
         })
+    os.environ['DUMMY_MONGODB_HOST'] = ''
 
 
 def test_instantiate():
     if sys.version_info[0] == 2:
         # Pachyderm is broken in 2.7 -- see https://github.com/pachyderm/python-pachyderm/issues/28
         return
+
+    os.environ['DUMMY_MONGODB_HOST'] = 'True'  # We use a dummy hostname, use short timeouts.
 
     with pytest.raises(pymongo.errors.ServerSelectionTimeoutError):
         # With new config style:
@@ -101,3 +106,5 @@ def test_instantiate():
                 }
             ]
         })
+
+    os.environ['DUMMY_MONGODB_HOST'] = ''
