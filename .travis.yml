@@ -23,6 +23,7 @@ notifications:
 
 # Try to speed up build a little.
 cache:
+  pip: true
   directories:
   - $HOME/.cache/pip
 

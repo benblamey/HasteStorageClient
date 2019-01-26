@@ -1,6 +1,8 @@
 import logging
 from pymongo import MongoClient
 from os.path import expanduser
+import os
+
 import json
 
 # These are deprecated, use the new-style config with custom IDs.
@@ -66,14 +68,19 @@ class HasteStorageClient:
         self.storage_policy = storage_policy
         self.targets = {t['id']: self.instantiate_target(t) for t in config['targets']}
 
-        self.mongo_client = MongoClient(config['haste_metadata_server']['connection_string'])
+        if os.getenv('DUMMY_MONGODB_HOST').lower() == 'true':
+            # We're running in a unit test, use a short server timeout.
+            mongo_kwargs = {'serverSelectionTimeoutMS': 100}
+        else:
+            mongo_kwargs = {}
+
+        self.mongo_client = MongoClient(config['haste_metadata_server']['connection_string'], **mongo_kwargs)
         self.mongo_collection = self.mongo_client.get_database()['strm_' + self.stream_id]
 
         # ensure indices (idempotent)
         self.mongo_collection.create_index('substream_id')
         self.mongo_collection.create_index('timestamp')
         self.mongo_collection.create_index('location')
-
 
     def my_import(self, name):
         components = name.split('.')
