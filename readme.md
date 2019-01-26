@@ -10,6 +10,17 @@ For now, this simply calls the MongoDB and Swift Container clients. Supports Pyt
 pip install haste-storage-client
 ```
 
+To send blobs to Pachyderm, python-pachyderm is required.
+Because of [this issue](https://github.com/pachyderm/python-pachyderm/issues/30), it needs to be installed manually:
+```
+git clone git@github.com:pachyderm/python-pachyderm.git
+cd python-pachyderm
+pip3 install -e .
+```
+
+Note that Pachyderm does not work under Python 2.7, because of:
+https://github.com/pachyderm/python-pachyderm/issues/28
+
 ## Example
 See [example.py](example.py).
 

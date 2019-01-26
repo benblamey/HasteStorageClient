@@ -2,7 +2,7 @@ import time
 import datetime
 import pymongo
 import pytest
-from pytest import skip
+import sys
 
 from haste_storage_client.core import HasteStorageClient, OS_SWIFT_STORAGE, TRASH
 from haste_storage_client.models.rest_interestingness_model import RestInterestingnessModel
@@ -41,7 +41,7 @@ def instantiate(haste_storage_client_config):
     client.close()
 
 
-def test_instantiate():
+def test_instantiate_pre2018():
     with pytest.raises(pymongo.errors.ServerSelectionTimeoutError):
         # With old (pre-2019) config:
         instantiate({
@@ -61,6 +61,12 @@ def test_instantiate():
             }
         })
 
+
+def test_instantiate():
+    if sys.version_info[0] == 2:
+        # Pachyderm is broken in 2.7 -- see https://github.com/pachyderm/python-pachyderm/issues/28
+        return
+
     with pytest.raises(pymongo.errors.ServerSelectionTimeoutError):
         # With new config style:
         instantiate({
@@ -71,7 +77,7 @@ def test_instantiate():
             'targets': [
                 {
                     'id': 'os_swift',
-                    'class': 'OsSwiftStorage',
+                    'class': 'haste_storage_client.storage.storage.OsSwiftStorage',
                     'config': {
                         # See: https://docs.openstack.org/keystoneauth/latest/
                         #   api/keystoneauth1.identity.v3.html#module-keystoneauth1.identity.v3.password
@@ -81,6 +87,16 @@ def test_instantiate():
                         'user_domain_name': 'xxxx',
                         'auth_url': 'xxxxx',
                         'project_domain_name': 'xxxx'
+                    }
+                },
+                {
+                    'id': 'pachy1',
+                    'class': 'haste_storage_client.storage.pachyderm.PachydermStorage',
+                    'config': {
+                        "host": None,
+                        "port": None,
+                        "repo": "haste",
+                        "branch": "master"
                     }
                 }
             ]

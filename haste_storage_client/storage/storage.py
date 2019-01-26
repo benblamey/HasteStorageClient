@@ -10,7 +10,7 @@ class Storage:
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
-    def save_blob(self, blob_bytes, blob_id):
+    def save_blob(self, blob_bytes, blob_id, stream_id):
         raise NotImplementedError('users must define method to use base class')
 
     @abc.abstractmethod
@@ -20,7 +20,7 @@ class Storage:
 
 class TrashStorage(Storage):
 
-    def save_blob(self, blob_bytes, blob_id):
+    def save_blob(self, blob_bytes, blob_id, stream_id):
         logging.info('blob id:{} sent to trash.'.format(blob_id))
 
     def close(self):
@@ -39,7 +39,7 @@ class OsSwiftStorage(Storage):
         # Try to connect now, to fail fast:
         self.__reauthenticate_if_needed()
 
-    def save_blob(self, blob_bytes, blob_id):
+    def save_blob(self, blob_bytes, blob_id, stream_id):
         self.__reauthenticate_if_needed()
 
         if isinstance(blob_bytes, bytearray):
@@ -47,7 +47,7 @@ class OsSwiftStorage(Storage):
             # (see https://bugs.launchpad.net/python-swiftclient/+bug/1741991)
             blob_bytes = bytes(blob_bytes)
 
-        self.conn.put_object('Haste_Stream_Storage', blob_id, blob_bytes)
+        self.conn.put_object('Haste_Stream_Storage', stream_id + '/' + blob_id, blob_bytes)
 
     def close(self):
         if self.conn is not None:
@@ -68,3 +68,4 @@ class OsSwiftStorage(Storage):
             keystone_session = session.Session(auth=auth)
             self.conn = swiftclient.client.Connection(session=keystone_session)
             self.conn_timestamp_connected = time.time()
+

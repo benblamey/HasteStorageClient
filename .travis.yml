@@ -13,6 +13,8 @@ python:
 - "3.6-dev"  # 3.6 development branch
 - "3.7-dev"  # 3.7 development branch
 install:
+# Pachyderm package is broken, must be installed from Git:
+- pip install git+https://github.com/pachyderm/python-pachyderm.git
 - pip install .
 script:
 - pytest tests

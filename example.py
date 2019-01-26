@@ -14,7 +14,7 @@ haste_storage_client_config = {
     'targets': [
         {
             'id': 'os_swift',  # ID used by the policy. User-defined. Needs to consistent between sessions.
-            'class': 'OsSwiftStorage',  # Needs to match a class in haste_storage_client.storage
+            'class': 'haste_storage_client.storage.storage.OsSwiftStorage',  # Needs to match a class in haste_storage_client.storage
             'config': {
                 # See: https://docs.openstack.org/keystoneauth/latest/
                 #   api/keystoneauth1.identity.v3.html#module-keystoneauth1.identity.v3.password
