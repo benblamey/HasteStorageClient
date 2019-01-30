@@ -68,7 +68,7 @@ class HasteStorageClient:
         self.storage_policy = storage_policy
         self.targets = {t['id']: self.instantiate_target(t) for t in config['targets']}
 
-        if os.getenv('DUMMY_MONGODB_HOST').lower() == 'true':
+        if os.getenv('DUMMY_MONGODB_HOST','').lower() == 'true':
             # We're running in a unit test, use a short server timeout.
             mongo_kwargs = {'serverSelectionTimeoutMS': 100}
         else:
@@ -152,7 +152,7 @@ class HasteStorageClient:
 
         return storage_platforms
 
-    def __save_blob_to_platform(self, blob_bytes, blob_id, storage_platform_id, stream_id):
+    def __save_blob_to_platform(self, blob_bytes, blob_id, storage_platform_id):
         if storage_platform_id in self.targets:
             self.targets[storage_platform_id].save_blob(blob_bytes, blob_id, self.stream_id)
         else:
