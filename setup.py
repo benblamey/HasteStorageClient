@@ -11,6 +11,7 @@ setup(name='haste_storage_client',
       description='Client for the HASTE storage plaform: http://haste.research.it.uu.se',
       author='Ben Blamey',
       author_email='ben.blamey@it.uu.se',
+      url='http://haste.research.it.uu.se',
       install_requires=[
           'pymongo',
           'python-swiftclient',
