@@ -57,7 +57,7 @@ client = HasteStorageClient(stream_id,
                             # storage_policy=[(0.5, 1.0, 'spjuth-lab-pachyderm')],  # map 0.5<=interestingness<=1.0 to Pachyderm, discard others.
                             )
 
-blob_bytes = b'this is a binary blob eg. image data.'
+blob_bytes = b'this is a binary blob eg. image data.\n'
 timestamp_cloud_edge = time.time()
 substream_id = 'B13'  # Group by microscopy well ID.
 
