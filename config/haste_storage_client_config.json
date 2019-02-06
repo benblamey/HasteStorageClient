@@ -2,6 +2,7 @@
   "haste_metadata_server": {
     "connection_string": "mongodb://130.xxx.yy.zz:27017/streams"
   },
+  "log_level": "INFO",
   "targets": [
     {
       "id": "os_swift",
@@ -16,12 +17,12 @@
       }
     },
     {
-      "id": "spjuth-lab-pachyderm",
+      "id": "my-pachyderm-setup",
       "class": "haste_storage_client.storage.pachyderm.PachydermStorage",
       "config": {
-        "host": null,
-        "port": null,
-        "repo": "haste",
+        "host": "myhost",
+        "port": 1234,
+        "repo": "myrepo",
         "branch": "master"
       }
     }

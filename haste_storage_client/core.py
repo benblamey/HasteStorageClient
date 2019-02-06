@@ -2,8 +2,15 @@ import logging
 from pymongo import MongoClient
 from os.path import expanduser
 import os
-
 import json
+import logging
+
+LOGGING_FORMAT_DATE = '%Y-%m-%d %H:%M:%S.%d3'
+LOGGING_FORMAT = '%(asctime)s - %(threadName)s - %(levelname)s - %(message)s'
+
+logging.basicConfig(level=logging.INFO,  # Can be overridden in config file.
+                    format=LOGGING_FORMAT,
+                    datefmt=LOGGING_FORMAT_DATE)
 
 # These are deprecated, use the new-style config with custom IDs.
 OS_SWIFT_STORAGE = 'os_swift'
@@ -57,6 +64,11 @@ class HasteStorageClient:
             }
             config = config_new
 
+        if 'log_level' in config:
+            log_level = config['log_level']
+            logging.getLogger().setLevel(log_level.upper())
+            logging.info('Log level set to: ' + log_level)
+
         if len(storage_policy) == 0:
             logging.warning('storage policy empty, no blobs will be saved.')
 
@@ -68,7 +80,7 @@ class HasteStorageClient:
         self.storage_policy = storage_policy
         self.targets = {t['id']: self.instantiate_target(t) for t in config['targets']}
 
-        if os.getenv('DUMMY_MONGODB_HOST','').lower() == 'true':
+        if os.getenv('DUMMY_MONGODB_HOST', '').lower() == 'true':
             # We're running in a unit test, use a short server timeout.
             mongo_kwargs = {'serverSelectionTimeoutMS': 100}
         else:
