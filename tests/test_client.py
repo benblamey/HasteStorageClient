@@ -10,7 +10,7 @@ from haste_storage_client.models.rest_interestingness_model import RestInteresti
 
 # Test that we can instantiate OK, and we get an timeout connecting to the DB server.
 # This basically tests if the source parses OK.
-def instantiate(haste_storage_client_config):
+def __instantiate_and_save(haste_storage_client_config):
     # Identifies both the experiment, and the session (ie. unique each time the stream starts),
     # for example, this would be a good format - this needs to be generated at the stream edge.
     initials = 'anna_exampleson'
@@ -24,7 +24,8 @@ def instantiate(haste_storage_client_config):
     client = HasteStorageClient(stream_id,
                                 config=haste_storage_client_config,
                                 interestingness_model=interestingness_model,
-                                storage_policy=[(0.5, 1.0, OS_SWIFT_STORAGE)]),  # map 0.5<=interestingness<=1.0 to OS swift.
+                                storage_policy=[
+                                    (0.5, 1.0, OS_SWIFT_STORAGE)])  # map 0.5<=interestingness<=1.0 to OS swift.
 
     blob_bytes = b'this is a binary blob eg. image data.'
     timestamp_cloud_edge = time.time()
@@ -41,12 +42,12 @@ def instantiate(haste_storage_client_config):
     client.close()
 
 
-def test_instantiate_pre2018():
+def test_instantiate_and_save_pre2018():
     os.environ['DUMMY_MONGODB_HOST'] = 'True'  # We use a dummy hostname, use short timeouts.
 
     with pytest.raises(pymongo.errors.ServerSelectionTimeoutError):
         # With old (pre-2019) config:
-        instantiate({
+        __instantiate_and_save({
             'haste_metadata_server': {
                 # See: https://docs.mongodb.com/manual/reference/connection-string/
                 'connection_string': 'mongodb://username:password@mongodb.thisdomaindoesnotexist.com/streams'
@@ -65,7 +66,7 @@ def test_instantiate_pre2018():
     os.environ['DUMMY_MONGODB_HOST'] = ''
 
 
-def test_instantiate():
+def test_instantiate_and_save():
     if sys.version_info[0] == 2:
         # Pachyderm is broken in 2.7 -- see https://github.com/pachyderm/python-pachyderm/issues/28
         return
@@ -74,7 +75,7 @@ def test_instantiate():
 
     with pytest.raises(pymongo.errors.ServerSelectionTimeoutError):
         # With new config style:
-        instantiate({
+        __instantiate_and_save({
             'haste_metadata_server': {
                 # See: https://docs.mongodb.com/manual/reference/connection-string/
                 'connection_string': 'mongodb://username:password@mongodb.thisdomaindoesnotexist.com/streams'
