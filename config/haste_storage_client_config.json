@@ -25,6 +25,14 @@
         "repo": "myrepo",
         "branch": "master"
       }
+    },
+    {
+      "id": "move-to-my-dir",
+      "class": "haste_storage_client.storage.storage.MoveToDir",
+      "config": {
+        "source_dir": "/path/to/src/",
+        "target_dir": "/path/to/dst/"
+      }
     }
   ]
 }

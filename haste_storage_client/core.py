@@ -156,18 +156,20 @@ class HasteStorageClient:
         storage_platforms = []
         if self.storage_policy is not None:
             for min_interestingness, max_interestingness, storage_id in self.storage_policy:
-                if min_interestingness <= interestingness <= max_interestingness and (storage_id not in storage_platforms):
-                    self.__save_blob_to_platform(blob_bytes, blob_id, storage_id)
+                if min_interestingness <= interestingness <= max_interestingness and (
+                        storage_id not in storage_platforms):
+                    self.__save_blob_to_platform(blob_bytes, blob_id, storage_id, metadata)
                     storage_platforms.append(storage_id)
 
         if len(storage_platforms) == 0:
-            logging.info('no storage platform matched in policy for blob with ID: %s, interestingness: %f', blob_id, interestingness)
+            logging.info('no storage platform matched in policy for blob with ID: %s, interestingness: %f', blob_id,
+                         interestingness)
 
         return storage_platforms
 
-    def __save_blob_to_platform(self, blob_bytes, blob_id, storage_platform_id):
+    def __save_blob_to_platform(self, blob_bytes, blob_id, storage_platform_id, metadata):
         if storage_platform_id in self.targets:
-            self.targets[storage_platform_id].save_blob(blob_bytes, blob_id, self.stream_id)
+            self.targets[storage_platform_id].save_blob(blob_bytes, blob_id, self.stream_id, metadata)
         else:
             raise ValueError('unknown storage platform')
 

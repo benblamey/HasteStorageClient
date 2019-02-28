@@ -10,7 +10,7 @@ from haste_storage_client.models.rest_interestingness_model import RestInteresti
 
 # Test that we can instantiate OK, and we get an timeout connecting to the DB server.
 # This basically tests if the source parses OK.
-def instantiate(haste_storage_client_config):
+def test_save(haste_storage_client_config):
     # Identifies both the experiment, and the session (ie. unique each time the stream starts),
     # for example, this would be a good format - this needs to be generated at the stream edge.
     initials = 'anna_exampleson'
@@ -46,7 +46,7 @@ def test_instantiate_pre2018():
 
     with pytest.raises(pymongo.errors.ServerSelectionTimeoutError):
         # With old (pre-2019) config:
-        instantiate({
+        test_save({
             'haste_metadata_server': {
                 # See: https://docs.mongodb.com/manual/reference/connection-string/
                 'connection_string': 'mongodb://username:password@mongodb.thisdomaindoesnotexist.com/streams'
@@ -74,7 +74,7 @@ def test_instantiate():
 
     with pytest.raises(pymongo.errors.ServerSelectionTimeoutError):
         # With new config style:
-        instantiate({
+        test_save({
             'haste_metadata_server': {
                 # See: https://docs.mongodb.com/manual/reference/connection-string/
                 'connection_string': 'mongodb://username:password@mongodb.thisdomaindoesnotexist.com/streams'

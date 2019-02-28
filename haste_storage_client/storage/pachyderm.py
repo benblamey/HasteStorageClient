@@ -20,7 +20,7 @@ class PachydermStorage(Storage):
 
         self.confirmed_repo_exists = False
 
-    def save_blob(self, blob_bytes, blob_id, stream_id):
+    def save_blob(self, blob_bytes, blob_id, stream_id, metadata):
         # Ensure the target repo exists.
         # As there may be many instances, to be safe just try to create it and check the error:
         if not self.confirmed_repo_exists:

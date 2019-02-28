@@ -10,12 +10,14 @@ haste_storage_client_config = {
         # In later versions of MongoDB (3?), it needs to be specified in the connection string.
         'connection_string': 'mongodb://130.xxx.yy.zz:27017/streams'
     },
-    "log_level": "DEBUG",  # Optional, defaults to 'INFO'. See https://docs.python.org/3/library/logging.html#levels for possible values.
+    # Optional, defaults to 'INFO'. See https://docs.python.org/3/library/logging.html#levels for possible values.
+    "log_level": "DEBUG",
     # Note the structure changed here in January 2019:
     'targets': [
         {
             'id': 'os_swift',  # ID used by the policy. User-defined. Needs to consistent between sessions.
-            'class': 'haste_storage_client.storage.storage.OsSwiftStorage',  # Needs to match a class in haste_storage_client.storage
+            'class': 'haste_storage_client.storage.storage.OsSwiftStorage',
+            # Needs to match a class in haste_storage_client.storage
             'config': {
                 # See: https://docs.openstack.org/keystoneauth/latest/
                 #   api/keystoneauth1.identity.v3.html#module-keystoneauth1.identity.v3.password
@@ -36,7 +38,17 @@ haste_storage_client_config = {
                 "repo": "myrepo",
                 "branch": "master"
             }
+        },
+
+        {
+            "id": "move-to-my-dir",
+            "class": "haste_storage_client.storage.storage.MoveToDir",
+            "config": {
+                "source_dir": "/path/to/src/",
+                "target_dir": "/path/to/dst/"
+            }
         }
+
     ]
 }
 
@@ -51,9 +63,10 @@ print('stream ID is: %s' % stream_id)
 interestingness_model = RestInterestingnessModel('http://localhost:5000/model/api/v0.1/evaluate')
 
 client = HasteStorageClient(stream_id,
-                            config=haste_storage_client_config,
+                            # config=haste_storage_client_config,
                             interestingness_model=interestingness_model,
-                            storage_policy=[(0.5, 1.0, 'spjuth-lab-pachyderm')],  # map 0.5<=interestingness<=1.0 to OS swift, discard others.
+                            storage_policy=[(0.5, 1.0, 'spjuth-lab-pachyderm')],
+                            # map 0.5<=interestingness<=1.0 to OS swift, discard others.
                             # storage_policy=[(0.5, 1.0, 'spjuth-lab-pachyderm')],  # map 0.5<=interestingness<=1.0 to Pachyderm, discard others.
                             )
 
