@@ -132,7 +132,7 @@ class HasteStorageClient:
                                                      substream_id=substream_id,
                                                      metadata=metadata)
         blob_id = 'strm_' + self.stream_id + '_ts_' + str(timestamp)
-        blob_storage_platforms = self.__save_blob(blob_id, blob_bytes, interestingness)
+        blob_storage_platforms = self.__save_blob(blob_id, blob_bytes, interestingness, metadata)
         if len(blob_storage_platforms) == 0:
             blob_id = ''
 
@@ -152,7 +152,7 @@ class HasteStorageClient:
         for key, storage_plaform in self.targets.items():
             storage_plaform.close()
 
-    def __save_blob(self, blob_id, blob_bytes, interestingness):
+    def __save_blob(self, blob_id, blob_bytes, interestingness, metadata):
         storage_platforms = []
         if self.storage_policy is not None:
             for min_interestingness, max_interestingness, storage_id in self.storage_policy:

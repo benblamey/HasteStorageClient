@@ -8,3 +8,6 @@ build
 .pytest_cache
 **.pyc
 dist
+
+tests/scratch/dst/**
+tests/scratch/src/**
