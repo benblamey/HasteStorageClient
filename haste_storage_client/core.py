@@ -93,6 +93,7 @@ class HasteStorageClient:
         self.mongo_collection.create_index('substream_id')
         self.mongo_collection.create_index('timestamp')
         self.mongo_collection.create_index('location')
+        self.mongo_collection.create_index('metadata.original_filename')
 
     def my_import(self, name):
         components = name.split('.')
@@ -160,7 +161,7 @@ class HasteStorageClient:
                     storage_platforms.append(storage_id)
 
         if len(storage_platforms) == 0:
-            logging.info('no storage platform matched in policy for blob with ID: {}, interestingness: {}', blob_id, interestingness)
+            logging.info('no storage platform matched in policy for blob with ID: %s, interestingness: %f', blob_id, interestingness)
 
         return storage_platforms
 
