@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='haste_storage_client',
-      version='0.12',
+      version='0.13',
       packages=['haste_storage_client',
                 'haste_storage_client.models',
                 'haste_storage_client.storage'
