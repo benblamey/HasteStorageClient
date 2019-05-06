@@ -39,7 +39,6 @@ haste_storage_client_config = {
                 "branch": "master"
             }
         },
-
         {
             "id": "move-to-my-dir",
             "class": "haste_storage_client.storage.storage.MoveToDir",
@@ -63,11 +62,12 @@ print('stream ID is: %s' % stream_id)
 interestingness_model = RestInterestingnessModel('http://localhost:5000/model/api/v0.1/evaluate')
 
 client = HasteStorageClient(stream_id,
-                            # config=haste_storage_client_config,
+                            config=haste_storage_client_config,
                             interestingness_model=interestingness_model,
-                            storage_policy=[(0.5, 1.0, 'spjuth-lab-pachyderm')],
-                            # map 0.5<=interestingness<=1.0 to OS swift, discard others.
-                            # storage_policy=[(0.5, 1.0, 'spjuth-lab-pachyderm')],  # map 0.5<=interestingness<=1.0 to Pachyderm, discard others.
+                            # Save 0.5<=interestingness<=1.0 in OpenStack swift, discard others:
+                            storage_policy=[(0.5, 1.0, 'os_swift')],
+                            # Save 0.5<=interestingness<=1.0 in Pachyderm, discard others:
+                            # storage_policy=[(0.5, 1.0, 'my-pachyderm-setup')],
                             )
 
 blob_bytes = b'this is a binary blob eg. image data.\n'
