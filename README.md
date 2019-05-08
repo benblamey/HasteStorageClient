@@ -2,7 +2,8 @@
 
 [![Build Status](https://travis-ci.org/HASTE-project/HasteStorageClient.svg?branch=master)](https://travis-ci.org/HASTE-project/HasteStorageClient)
 
-For now, this simply calls the MongoDB and Swift Container clients. Supports Python 2.7 and Python 3.*.
+Smart middleware for working with a variety of storage media with Scientific Computing datasets. 
+Supports Python 2.7 and Python 3.*.
 
 ## Installation
 
