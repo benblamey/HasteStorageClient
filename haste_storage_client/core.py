@@ -33,10 +33,9 @@ class HasteClient(metaclass=ABCMeta):
         """
         pass
 
+    @abstractmethod
     def close(self):
-        self.mongo_client.close()
-        for key, storage_plaform in self.targets.items():
-            storage_plaform.close()
+        pass
 
 
 class HasteTieredClient(HasteClient):
@@ -167,6 +166,11 @@ class HasteTieredClient(HasteClient):
         result = self.mongo_collection.insert(document)
 
         return document
+
+    def close(self):
+        self.mongo_client.close()
+        for key, storage_plaform in self.targets.items():
+            storage_plaform.close()
 
     def __save_blob(self, blob_id, blob_bytes, interestingness, metadata):
         storage_platforms = []

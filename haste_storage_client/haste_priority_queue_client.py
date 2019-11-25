@@ -82,6 +82,9 @@ class HastePriorityQueueClient(HasteClient):
         self.states[index] = STATE_IN_QUEUE_NOT_PRE_PROCESSED
         logging.info(f'PLOT_QUEUE - {time.time()} - NEW_FILE - {index}')
 
+    def close(self):
+        pass
+
     def pop_for_sending(self):
         if np.sum(self.states == STATE_IN_QUEUE_PRE_PROCESSED) > 0:
             logging.debug('Send the first preprocessed file:')
