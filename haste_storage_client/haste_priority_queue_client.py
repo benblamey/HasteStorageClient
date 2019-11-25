@@ -2,7 +2,6 @@ import logging
 
 from haste_storage_client.core import LOGGING_FORMAT_DATE, LOGGING_FORMAT, HasteClient
 
-from scipy.interpolate import interp1d
 import numpy as np
 import time
 
