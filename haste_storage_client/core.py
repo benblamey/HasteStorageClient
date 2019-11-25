@@ -21,6 +21,10 @@ INTERESTINGNESS_DEFAULT = 1.0
 
 
 class HasteClient(metaclass=ABCMeta):
+    """
+    Base class for various HASTE clients -- e.g. those managing (tiered) storage, and prioritized processing queues.
+    """
+
     @abstractmethod
     def save(self, timestamp, location, substream_id, blob_bytes, metadata):
         """
