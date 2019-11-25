@@ -4,7 +4,7 @@ import pymongo
 import pytest
 import sys
 import os
-from haste_storage_client.core import HasteStorageClient, OS_SWIFT_STORAGE
+from haste_storage_client.core import HasteTieredClient, OS_SWIFT_STORAGE
 from haste_storage_client.models.rest_interestingness_model import RestInterestingnessModel
 
 
@@ -21,10 +21,10 @@ def __instantiate_and_save(haste_storage_client_config):
     # Optionally, specify REST server with interesting model:
     interestingness_model = RestInterestingnessModel('http://thisdomaindoesnotexist.com:5000/model/api/v0.1/evaluate')
 
-    client = HasteStorageClient(stream_id,
-                                config=haste_storage_client_config,
-                                interestingness_model=interestingness_model,
-                                storage_policy=[
+    client = HasteTieredClient(stream_id,
+                               config=haste_storage_client_config,
+                               interestingness_model=interestingness_model,
+                               storage_policy=[
                                     (0.5, 1.0, OS_SWIFT_STORAGE)])  # map 0.5<=interestingness<=1.0 to OS swift.
 
     blob_bytes = b'this is a binary blob eg. image data.'
