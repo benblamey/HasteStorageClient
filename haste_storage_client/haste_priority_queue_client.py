@@ -35,13 +35,14 @@ class HastePriorityQueueClient(HasteClient):
                  capacity,
                  mode,
                  golden_estimated_interestingess_scores,
-                 interestingess_function
+                 interestingess_model
                  ):
         logging.basicConfig(level=logging.INFO,
                             format=LOGGING_FORMAT,
                             datefmt=LOGGING_FORMAT_DATE)
         self.metadata = []
         self.mode = mode
+        self.interestingess_model = interestingess_model
 
         # TODO: this should be the *initial* capacity.
         self.states = np.full(capacity, STATE_NONE)
@@ -173,59 +174,23 @@ class HastePriorityQueueClient(HasteClient):
         self.known_scores[index] = interestingness_score
         self.metadata[index] = new_metadata
 
-        self._update_estimated_scores()
+        # The interestingness models used for the Tiered Storage systems use an interestingness function which is a function of a single document.
+        # In this case, the interestingness of all documents depends on all other documents. 
+        # We use the same API.
+        # TODO: think about creating a uniform API for interestingness functions of both kinds. 
+
+        self.interestingess_model.interestingness(None,  # stream_id
+                                                  None,  # timestamp
+                                                  index,  # location
+                                                  None,  # substream ID
+                                                  new_metadata,  # metadata
+                                                  self)  # context collection
 
     def log_queue_info(self):
         # Log info about the present state of the queue
         count_preprocessed = np.sum(self.states == STATE_IN_QUEUE_PRE_PROCESSED)
         count_not_preprocessed = np.sum(self.states == STATE_IN_QUEUE_NOT_PRE_PROCESSED)
         logging.info(f'PLOT - {time.time()} - {count_preprocessed} - {count_not_preprocessed}')
-
-    def _update_estimated_scores(self):
-
-
-
-        start = time.time()
-
-        # Fit the spline:
-        to_fit_indices = (self.known_scores > 0)
-
-        if np.sum(to_fit_indices) > 3:
-            to_fit_X = self.index[to_fit_indices]
-            to_fit_Y = self.known_scores[to_fit_indices]
-
-            # index of first 'True'
-            min_interpolate_range = np.argmax(to_fit_indices)
-            # index of last 'True'
-            max_interpolate_range = len(to_fit_indices) - np.argmax(to_fit_indices[::-1]) - 1
-
-            if True:
-                # Linear spline
-                f = interp1d(to_fit_X, to_fit_Y, assume_sorted=True)
-            else:
-                # Cubic spline
-                f = interp1d(to_fit_X, to_fit_Y, assume_sorted=True, kind='cubic')
-
-            self.estimated_scores[min_interpolate_range:max_interpolate_range + 1] = f(
-                self.index[min_interpolate_range:max_interpolate_range + 1])
-
-            self.estimated_scores[0:min_interpolate_range] = self.estimated_scores[min_interpolate_range]
-            self.estimated_scores[max_interpolate_range + 1:-1] = self.estimated_scores[max_interpolate_range]
-
-            # min_estimated_score = np.min(self.estimated_scores)
-            #
-            # if min_estimated_score <= 0:
-            #     self.estimated_scores = self.estimated_scores + 1 + (-min_estimated_score)
-            #
-            # assert (np.min(self.estimated_scores) >= 0)
-
-            logging.info(
-                f'{time.time()}* known_scores_are: *{self.known_scores.tolist()}* states_are: *{self.states.tolist()}*')
-
-            logging.info(f'_update_estimated_scores took {time.time() - start}')
-
-            if self.mode == MODE_GOLDEN:
-                self.estimated_scores = self.golden_estimated_interestingness_scores.copy()
 
     # def plot(self):
     #     # plt.plot(self.index, map(lambda filename: get_golden_prio_for_filename(filename), )
