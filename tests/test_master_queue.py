@@ -1,8 +1,6 @@
 import sys
 
 import numpy as np
-from haste_storage_client.haste_priority_queue_client import MODE_GOLDEN, HastePriorityQueueClient, STATE_NONE, STATE_IN_QUEUE_NOT_PRE_PROCESSED, STATE_PRE_PROCESSING, STATE_POPPING, STATE_POPPED, \
-    STATE_IN_QUEUE_PRE_PROCESSED
 
 
 def test_master_queue_golden():
@@ -10,6 +8,9 @@ def test_master_queue_golden():
         # MasterQueue only supports Python 3.6 or above.
         # TODO: investigate fixing this.
         return
+
+    from haste_storage_client.haste_priority_queue_client import MODE_GOLDEN, HastePriorityQueueClient, STATE_NONE, STATE_IN_QUEUE_NOT_PRE_PROCESSED, STATE_PRE_PROCESSING, STATE_POPPING, STATE_POPPED, \
+        STATE_IN_QUEUE_PRE_PROCESSED
 
     class MockInterestingnessModel:
         def interestingness(self,
