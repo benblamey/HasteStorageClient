@@ -14,7 +14,8 @@ python:
 - "3.7-dev"  # 3.7 development branch
 install:
 # Pachyderm package is broken, must be installed from Git:
-- pip install git+https://github.com/pachyderm/python-pachyderm.git
+#- pip install git+https://github.com/pachyderm/python-pachyderm.git
+# Update: now it doesn't work for Python 2.x, so exclude it from the tests.
 - pip install .
 script:
 - pytest tests
