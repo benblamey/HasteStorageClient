@@ -20,7 +20,7 @@ TRASH = 'trash'
 INTERESTINGNESS_DEFAULT = 1.0
 
 
-class HasteClient(metaclass=ABCMeta):
+class HasteClient():
     """
     Base class for various HASTE clients -- e.g. those managing (tiered) storage, and prioritized processing queues.
     """
