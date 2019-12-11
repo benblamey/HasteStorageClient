@@ -60,7 +60,7 @@ class HasteTieredClient(HasteClient):
         :param interestingness_model (InterestingnessModel): determines interestingness of the document,
             and hence the intended storage platform(s) for the blob. 
             `None` implies all documents will have interestingness=1.0
-        :param storage_policy (list): policy mapping closed intervals of interestingness values to storage platform IDs, eg.:
+        :param storage_policy (list): policy mapping (closed lower bound, open upper bound) intervals of interestingness values to storage platform IDs, eg.:
             [(0.5, 1.0, 'my_os_swift')]
             Overlapping intervals mean that the blob will be saved to multiple classes. 
             Storage platform IDs need to be included in the config.
@@ -180,7 +180,7 @@ class HasteTieredClient(HasteClient):
         storage_platforms = []
         if self.storage_policy is not None:
             for min_interestingness, max_interestingness, storage_id in self.storage_policy:
-                if min_interestingness <= interestingness <= max_interestingness and (
+                if min_interestingness < interestingness <= max_interestingness and (
                         storage_id not in storage_platforms):
                     self.__save_blob_to_platform(blob_bytes, blob_id, storage_id, metadata)
                     storage_platforms.append(storage_id)
