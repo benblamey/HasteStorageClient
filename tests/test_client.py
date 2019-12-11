@@ -67,9 +67,9 @@ def test_instantiate_and_save_pre2018():
 
 
 def test_instantiate_and_save():
-    if sys.version_info[0] == 2:
-        # Pachyderm is broken in 2.7 -- see https://github.com/pachyderm/python-pachyderm/issues/28
-        return
+    # if sys.version_info[0] == 2:
+    #     # Pachyderm is broken in 2.7 -- see https://github.com/pachyderm/python-pachyderm/issues/28
+    #     return
 
     os.environ['DUMMY_MONGODB_HOST'] = 'True'  # We use a dummy hostname, use short timeouts.
 
@@ -95,16 +95,17 @@ def test_instantiate_and_save():
                         'project_domain_name': 'xxxx'
                     }
                 },
-                {
-                    'id': 'pachy1',
-                    'class': 'haste_storage_client.storage.pachyderm.PachydermStorage',
-                    'config': {
-                        "host": None,
-                        "port": None,
-                        "repo": "haste",
-                        "branch": "master"
-                    }
-                }
+                # Don't test pachyderm,
+                # {
+                #     'id': 'pachy1',
+                #     'class': 'haste_storage_client.storage.pachyderm.PachydermStorage',
+                #     'config': {
+                #         "host": None,
+                #         "port": None,
+                #         "repo": "haste",
+                #         "branch": "master"
+                #     }
+                # }
             ]
         })
 

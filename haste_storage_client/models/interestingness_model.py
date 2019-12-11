@@ -33,6 +33,6 @@ class InterestingnessModel:
         :param location (tuple): spatial information (eg. (x,y)).
         :param substream_id (string): ID for grouping of documents in stream (eg. microscopy well ID), or 'None'.
         :param metadata (dict): extracted metadata (eg. image features).
-        :param mongo_collection: collection in mongoDB allowing custom queries (this is a hack - best avoided!)
+        :param mongo_collection: context-specific collection for the context (e.g. mongoDB) allowing interestingness functions to use information related to other documents in the stream. Named for backwards compatibility.
         """
         return {'interestingness': 1}

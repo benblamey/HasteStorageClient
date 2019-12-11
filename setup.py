@@ -18,6 +18,7 @@ setup(name='haste_storage_client',
           'keystoneauth1',
           'future',
           # TODO: add Pachyderm (when its fixed)
+          'numpy'
       ],
       test_requires=[
           'pytest'

@@ -20,7 +20,11 @@ TRASH = 'trash'
 INTERESTINGNESS_DEFAULT = 1.0
 
 
-class HasteClient(metaclass=ABCMeta):
+class HasteClient():
+    """
+    Base class for various HASTE clients -- e.g. those managing (tiered) storage, and prioritized processing queues.
+    """
+
     @abstractmethod
     def save(self, timestamp, location, substream_id, blob_bytes, metadata):
         """
@@ -33,10 +37,9 @@ class HasteClient(metaclass=ABCMeta):
         """
         pass
 
+    @abstractmethod
     def close(self):
-        self.mongo_client.close()
-        for key, storage_plaform in self.targets.items():
-            storage_plaform.close()
+        pass
 
 
 class HasteTieredClient(HasteClient):
@@ -167,6 +170,11 @@ class HasteTieredClient(HasteClient):
         result = self.mongo_collection.insert(document)
 
         return document
+
+    def close(self):
+        self.mongo_client.close()
+        for key, storage_plaform in self.targets.items():
+            storage_plaform.close()
 
     def __save_blob(self, blob_id, blob_bytes, interestingness, metadata):
         storage_platforms = []
