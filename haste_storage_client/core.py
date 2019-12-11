@@ -1,4 +1,5 @@
-import logging
+from abc import ABCMeta, abstractmethod
+
 from pymongo import MongoClient
 from os.path import expanduser
 import os
@@ -19,7 +20,29 @@ TRASH = 'trash'
 INTERESTINGNESS_DEFAULT = 1.0
 
 
-class HasteStorageClient:
+class HasteClient():
+    """
+    Base class for various HASTE clients -- e.g. those managing (tiered) storage, and prioritized processing queues.
+    """
+
+    @abstractmethod
+    def save(self, timestamp, location, substream_id, blob_bytes, metadata):
+        """
+        :param timestamp (numeric): should come from the cloud edge (eg. microscope). integer or floating point.
+            *Uniquely identifies the document within the streaming session*.
+        :param location (tuple): spatial information (eg. (x,y)).
+        :param substream_id (string): ID for grouping of documents in stream (eg. microscopy well ID), or 'None'.
+        :param blob_bytes (byte array): binary blob (eg. image).
+        :param metadata (dict): extracted metadata (eg. image features).
+        """
+        pass
+
+    @abstractmethod
+    def close(self):
+        pass
+
+
+class HasteTieredClient(HasteClient):
 
     def __init__(self,
                  stream_id,
@@ -97,6 +120,7 @@ class HasteStorageClient:
 
     def my_import(self, name):
         components = name.split('.')
+        print('importing: ' + str(components))
         mod = __import__('.'.join(components[0:-1]))
         for comp in components[1:]:
             mod = getattr(mod, comp)
@@ -194,3 +218,7 @@ class HasteStorageClient:
         else:
             interestingness = INTERESTINGNESS_DEFAULT
         return interestingness
+
+
+# Alias for backwards compatibility
+HasteStorageClient = HasteTieredClient

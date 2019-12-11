@@ -4,7 +4,7 @@ import time
 
 import pytest
 
-from haste_storage_client.core import HasteStorageClient
+from haste_storage_client.core import HasteTieredClient
 
 # Skip by default -- requires mongodb
 @pytest.mark.skip
@@ -46,10 +46,10 @@ def test_instantiate_and_save_movetodir():
 
     # Optionally, specify REST server with interesting model:
 
-    client = HasteStorageClient(stream_id,
-                                config=haste_storage_client_config,
-                                interestingness_model=None,
-                                storage_policy=[(0.5, 1.0, 'move-to-my-dir')])
+    client = HasteTieredClient(stream_id,
+                               config=haste_storage_client_config,
+                               interestingness_model=None,
+                               storage_policy=[(0.5, 1.0, 'move-to-my-dir')])
 
     client.save(timestamp_cloud_edge,
                 (12.34, 56.78),
