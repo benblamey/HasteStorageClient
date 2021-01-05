@@ -19,8 +19,7 @@ cd python-pachyderm
 pip3 install -e .
 ```
 
-Note that Pachyderm does not work under Python 2.7, because of:
-https://github.com/pachyderm/python-pachyderm/issues/28
+Note that Pachyderm no longer supports Python 2.x
 
 ## Example
 See [example.py](example.py).
