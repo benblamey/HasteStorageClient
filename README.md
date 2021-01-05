@@ -1,6 +1,6 @@
 # Client for the HASTE Storage Engine
 
-[![Build Status](https://travis-ci.org/HASTE-project/HasteStorageClient.svg?branch=master)](https://travis-ci.org/HASTE-project/HasteStorageClient)
+[![Build Status](https://travis-ci.com/HASTE-project/HasteStorageClient.svg?branch=master)](https://travis-ci.com/HASTE-project/HasteStorageClient)
 
 Smart middleware for working with a variety of storage media with Scientific Computing datasets. 
 Supports Python 2.7 and Python 3.*.
