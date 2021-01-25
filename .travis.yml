@@ -3,12 +3,12 @@ python:
 #  - "2.6" -- not supported -- issue:
 #     File "/home/travis/virtualenv/python2.6.9/lib/python2.6/site-packages/swiftclient/client.py", line 139
 #       return {key: safe_value(key, val) for (key, val) in headers}
-- "2.7"
+#- "2.7" (won't deploy via travis, no longer supported by pio)
 
 #  - "3.3" -- broken on TravisCI -- "The program 'pytest' is currently not installed. To run 'pytest' please ask your administrator to install the package 'python-logilab-common'"
 # - "3.4" -- fails: RuntimeError: Python 3.5 or later is required  Couldn't install pip, setuptools, twine or wheel.
-- "3.5"
-- "3.5-dev"  # 3.5 development branch
+#- "3.5"  (won't deploy via travis, no longer supported by pio)
+#- "3.5-dev"  # 3.5 development branch  (won't deploy via travis, no longer supported by pio)
 - "3.6"
 - "3.6-dev"  # 3.6 development branch
 - "3.7-dev"  # 3.7 development branch
